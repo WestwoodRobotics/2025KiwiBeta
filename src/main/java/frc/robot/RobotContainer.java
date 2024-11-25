@@ -1,10 +1,9 @@
-
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 import java.sql.Driver;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.json.JSONObject;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -151,6 +150,22 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
+    // Check if settings.json exists, if not create it with default values
+    File settingsFile = new File("src/main/deploy/pathplanner/settings.json");
+    if (!settingsFile.exists()) {
+      try {
+        settingsFile.createNewFile();
+        JSONObject defaultSettings = new JSONObject();
+        defaultSettings.put("isHolonomic", true);
+        defaultSettings.put("maxVelocity", 3.0);
+        defaultSettings.put("maxAcceleration", 2.0);
+        FileWriter writer = new FileWriter(settingsFile);
+        writer.write(defaultSettings.toString());
+        writer.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   /*
