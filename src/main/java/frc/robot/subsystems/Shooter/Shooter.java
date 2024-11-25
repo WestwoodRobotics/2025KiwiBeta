@@ -1,8 +1,11 @@
 package frc.robot.subsystems.Shooter;
 
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.UtilityConstants;
@@ -17,10 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class Shooter extends SubsystemBase {
 
-    private CANSparkFlex topRoller;
-    private CANSparkFlex bottomRoller;
+    private SparkFlex topRoller;
+    private SparkFlex bottomRoller;
 
-    private boolean isPIDCOntrol;
+    private boolean isPIDControl;
 
     private PIDController TopRollerPIDController;
     private PIDController BottomRollerPIDController;
@@ -36,19 +39,29 @@ public class Shooter extends SubsystemBase {
      * @param isPIDControl Whether to use PID control for the shooter.
      */
     public Shooter(boolean isPIDControl) {
-        topRoller = new CANSparkFlex(ShooterConstants.kTopRollerPort, MotorType.kBrushless);
-        bottomRoller = new CANSparkFlex(ShooterConstants.kBottomRollerPort, MotorType.kBrushless);
-        this.isPIDCOntrol = isPIDControl;
-        topRoller.setIdleMode(IdleMode.kBrake); bottomRoller.setIdleMode(IdleMode.kBrake);
-        
+        topRoller = new SparkFlex(ShooterConstants.kTopRollerPort, MotorType.kBrushless);
+        bottomRoller = new SparkFlex(ShooterConstants.kBottomRollerPort, MotorType.kBrushless);
+        this.isPIDControl = isPIDControl;
 
-        this.TopRollerPIDController = new PIDController(ShooterConstants.kTopRollerP, 
-                                                        ShooterConstants.kTopRollerI, 
-                                                        ShooterConstants.kTopRollerD);
+        // Create a configuration object for the rollers
+        SparkMaxConfig rollerConfig = new SparkMaxConfig();
+        rollerConfig.idleMode(IdleMode.kBrake);
 
-        this.BottomRollerPIDController = new PIDController(ShooterConstants.kBottomRollerP, 
-                                                           ShooterConstants.kBottomRollerI, 
-                                                           ShooterConstants.kBottomRollerD);
+        // Apply the configuration to the rollers
+        topRoller.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        bottomRoller.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        this.TopRollerPIDController = new PIDController(
+            ShooterConstants.kTopRollerP,
+            ShooterConstants.kTopRollerI,
+            ShooterConstants.kTopRollerD
+        );
+
+        this.BottomRollerPIDController = new PIDController(
+            ShooterConstants.kBottomRollerP,
+            ShooterConstants.kBottomRollerI,
+            ShooterConstants.kBottomRollerD
+        );
     }
 
     /**
@@ -75,11 +88,11 @@ public class Shooter extends SubsystemBase {
      * @param power The power to set for both the top and bottom roller motors.
      */
     public void setShooterPower(double power) {
-        setTopRollerPower(-power);
-        setBottomRollerPower(-power);
+        setTopRollerPower(power);
+        setBottomRollerPower(power);
     }
 
-    public void setShooterPower(double upperPower, double lowerPower){
+    public void setShooterPower(double upperPower, double lowerPower) {
         setTopRollerPower(-upperPower);
         setBottomRollerPower(-lowerPower);
     }
@@ -137,7 +150,7 @@ public class Shooter extends SubsystemBase {
     public PIDController getBottomRollerPIDController() {
         return BottomRollerPIDController;
     }
-    
+
     /**
      * Sets the RPM setpoint for the top roller motor.
      * 
@@ -180,9 +193,9 @@ public class Shooter extends SubsystemBase {
      * @return True if PID control is enabled, false otherwise.
      */
     public boolean isPIDControl() {
-        return isPIDCOntrol;
+        return isPIDControl;
     }
-    
+
     /**
      * Stops both the top and bottom roller motors.
      */
@@ -190,23 +203,18 @@ public class Shooter extends SubsystemBase {
         setTopRollerPower(0);
         setBottomRollerPower(0);
     }
-    
+
     /**
      * Periodically updates the SmartDashboard with the shooter motor's RPM and current.
      * This method is called automatically to update sensor status on the dashboard.
      */
     @Override
     public void periodic() {
-
-        if (UtilityConstants.debugMode){
+        if (UtilityConstants.debugMode) {
             SmartDashboard.putNumber("Top Roller RPM", getTopRollerMotorRawRPM());
             SmartDashboard.putNumber("Bottom Roller RPM", getBottomRollerMotorRawRPM());
             SmartDashboard.putNumber("Top Roller Current", topRoller.getOutputCurrent());
             SmartDashboard.putNumber("Bottom Roller Current", bottomRoller.getOutputCurrent());
-
         }
-    
     }
-
-
 }

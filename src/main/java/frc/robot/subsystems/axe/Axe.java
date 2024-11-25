@@ -1,9 +1,10 @@
 package frc.robot.subsystems.axe;
 
-import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,14 +12,21 @@ import frc.robot.Constants.AxeConstants;
 
 public class Axe extends SubsystemBase {
 
-    private CANSparkMax axeMotor;
+    private SparkMax axeMotor;
     private PIDController axePIDController;
     private double encoderOffset;
 
     public Axe() {
-        this.axeMotor = new CANSparkMax(AxeConstants.kAxeMotorPort, MotorType.kBrushless);
+        this.axeMotor = new SparkMax(AxeConstants.kAxeMotorPort, SparkMax.MotorType.kBrushless);
         this.axePIDController = new PIDController(AxeConstants.kP, AxeConstants.kI, AxeConstants.kD);
-        axeMotor.setIdleMode(IdleMode.kCoast);
+        
+        // Create and apply motor configuration
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.idleMode(IdleMode.kCoast);
+        
+        // Apply the configuration to the motor
+        axeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
         encoderOffset = 0;
     }
 
@@ -46,5 +54,4 @@ public class Axe extends SubsystemBase {
     public void periodic(){
         System.out.println(this.getAxePosition());
     }
-    
 }

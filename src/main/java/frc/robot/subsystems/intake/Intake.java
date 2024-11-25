@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.UtilityConstants;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 /**
  * The Intake class represents the intake subsystem of the robot.
@@ -15,7 +15,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
  * stop the motor, and get the motor's RPM.
  */
 public class Intake extends SubsystemBase {
-    private CANSparkBase intakeMotor;
+    private SparkBase intakeMotor;
     private PIDController PIDController;
 
     /**
@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
      * Initializes the intake motor and PID controller.
      */
     public Intake() {
-        intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless); 
+        intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless); 
         this.PIDController = new PIDController(IntakeConstants.kP, 
                                                IntakeConstants.kI, 
                                                IntakeConstants.kD);

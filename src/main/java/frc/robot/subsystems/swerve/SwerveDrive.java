@@ -1,9 +1,11 @@
 package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -74,11 +76,21 @@ public class SwerveDrive extends SubsystemBase {
 
   Field2d fieldVisualization;
   private boolean isYuMode;
+  private RobotConfig config;
+
+
 
   /**
    * Initializes a new instance of the SwerveDrive class.
    */
   public SwerveDrive() {
+
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+    }
     isSlowMode = false;
     try {
       gyroSubsystem = new Gyro();
@@ -90,27 +102,28 @@ public class SwerveDrive extends SubsystemBase {
     fieldVisualization = new Field2d();
     SmartDashboard.putData("Field", fieldVisualization);
 
-    AutoBuilder.configureHolonomic(
-      this::getPose,
-      this::resetPose,
-      this::getRobotRelativeSpeeds,
-      this::driveChassisSpeeds,
-      new HolonomicPathFollowerConfig(
-              new PIDConstants(5, 0.2, 0),
-              new PIDConstants(2, 0.1, 0),
-              AutoConstants.kMaxModuleSpeedMetersPerSecond,
-              AutoConstants.kDriveBaseRadius,
-              new ReplanningConfig()
+    AutoBuilder.configure(
+      this::getPose, // Robot pose supplier
+      this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      (speeds, feedforwards) -> driveChassisSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+      new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
       ),
+      config, // The robot configuration
       () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
-          return (alliance.get() == DriverStation.Alliance.Red);
+          return alliance.get() == DriverStation.Alliance.Red;
         }
         return false;
       },
-      this
-    );
+      this); // Reference to this subsystem to set requirements
   }
 
   /**

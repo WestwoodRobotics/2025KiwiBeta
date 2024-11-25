@@ -1,7 +1,12 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +17,16 @@ import java.util.List;
  * stopping motors, and accessing encoder values.
  */
 public class MotorControlGroup extends SubsystemBase {
-    private List<CANSparkBase> motors;
+    private List<SparkBase> motors;
 
     /**
      * Constructs a new MotorControlGroup with the specified motors.
      * 
      * @param motors The motors to be controlled by this group.
      */
-    public MotorControlGroup(CANSparkBase... motors) {
+    public MotorControlGroup(SparkBase... motors) {
         this.motors = new ArrayList<>();
-        for (CANSparkBase motor : motors) {
+        for (SparkBase motor : motors) {
             this.motors.add(motor);
         }
     }
@@ -32,7 +37,7 @@ public class MotorControlGroup extends SubsystemBase {
      * @param power The power to set for the motors.
      */
     public void set(double power) {
-        for (CANSparkBase motor : motors) {
+        for (SparkBase motor : motors) {
             motor.set(power);
         }
     }
@@ -53,7 +58,7 @@ public class MotorControlGroup extends SubsystemBase {
      * Stops all motors in the group.
      */
     public void stop() {
-        for (CANSparkBase motor : motors) {
+        for (SparkBase motor : motors) {
             motor.set(0);
         }
     }
@@ -103,10 +108,10 @@ public class MotorControlGroup extends SubsystemBase {
      * @param d The derivative coefficient.
      */
     public void setPID(double p, double i, double d) {
-        for (CANSparkBase motor : motors) {
-            motor.getPIDController().setP(p);
-            motor.getPIDController().setI(i);
-            motor.getPIDController().setD(d);
+        for (SparkBase motor : motors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.closedLoop.pid(p, i, d);
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
@@ -120,9 +125,9 @@ public class MotorControlGroup extends SubsystemBase {
      */
     public void setPID(double p, double i, double d, int motorIndex) {
         if (motorIndex >= 0 && motorIndex < motors.size()) {
-            motors.get(motorIndex).getPIDController().setP(p);
-            motors.get(motorIndex).getPIDController().setI(i);
-            motors.get(motorIndex).getPIDController().setD(d);
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.closedLoop.pid(p, i, d);
+            motors.get(motorIndex).configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
@@ -146,7 +151,7 @@ public class MotorControlGroup extends SubsystemBase {
      */
     public double getAverageTemperature() {
         double totalTemp = 0;
-        for (CANSparkBase motor : motors) {
+        for (SparkBase motor : motors) {
             totalTemp += motor.getMotorTemperature();
         }
         return totalTemp / motors.size();
@@ -157,9 +162,11 @@ public class MotorControlGroup extends SubsystemBase {
      * 
      * @param mode The idle mode to set for the motors.
      */
-    public void setIdleMode(CANSparkMax.IdleMode mode) {
-        for (CANSparkBase motor : motors) {
-            ((CANSparkMax) motor).setIdleMode(mode);
+    public void setIdleMode(IdleMode mode) {
+        for (SparkBase motor : motors) {
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
@@ -169,9 +176,11 @@ public class MotorControlGroup extends SubsystemBase {
      * @param mode The idle mode to set for the motor.
      * @param motorIndex The index of the motor to set the idle mode for.
      */
-    public void setIdleMode(CANSparkMax.IdleMode mode, int motorIndex) {
+    public void setIdleMode(IdleMode mode, int motorIndex) {
         if (motorIndex >= 0 && motorIndex < motors.size()) {
-            ((CANSparkMax) motors.get(motorIndex)).setIdleMode(mode);
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.idleMode(mode);
+            motors.get(motorIndex).configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
@@ -179,8 +188,10 @@ public class MotorControlGroup extends SubsystemBase {
      * Burns the flash memory for all motors in the group.
      */
     public void burnFlash() {
-        for (CANSparkBase motor : motors) {
-            ((CANSparkMax) motor).burnFlash();
+        for (SparkBase motor : motors) {
+            // In REVLib 2025, burnFlash() is handled by configure() with PersistMode.kPersistParameters
+            SparkMaxConfig config = new SparkMaxConfig();
+            motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 
@@ -191,7 +202,9 @@ public class MotorControlGroup extends SubsystemBase {
      */
     public void burnFlash(int motorIndex) {
         if (motorIndex >= 0 && motorIndex < motors.size()) {
-            ((CANSparkMax) motors.get(motorIndex)).burnFlash();
+            // In REVLib 2025, burnFlash() is handled by configure() with PersistMode.kPersistParameters
+            SparkMaxConfig config = new SparkMaxConfig();
+            motors.get(motorIndex).configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         }
     }
 }

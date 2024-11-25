@@ -158,6 +158,7 @@ public class Gyro extends SubsystemBase {
 
   public double getGyroHeadingFromPathPlannerAuto(String auto){
     //Get the starting heading from PathPlanner Auto 
-    return PathPlannerAuto.getStaringPoseFromAutoFile(auto).getRotation().getDegrees();
+    PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(auto);
+    return pathPlannerAuto.getStartingPose().getRotation().getDegrees();
   }
 }
