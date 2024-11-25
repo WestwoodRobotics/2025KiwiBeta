@@ -59,19 +59,17 @@ public class SwerveModule {
         drivingMotorController.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         // Configure turning motor
+        // In SwerveModule.java constructor
         SparkMaxConfig turningConfig = new SparkMaxConfig();
         turningConfig.encoder
-                .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
-                .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor)
-                .inverted(ModuleConstants.kTurningEncoderInverted);
+            .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
+            .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+        // Remove the .inverted() call as it's not compatible with brushless mode
         turningConfig.closedLoop
-                .pidf(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF)
-                .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput)
-                .positionWrappingEnabled(true)
-                .positionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
-        turningConfig
-                .idleMode(ModuleConstants.kTurningMotorIdleMode)
-                .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+            .pidf(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF)
+            .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput)
+            .positionWrappingEnabled(true)
+            .positionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
 
         turningMotorController.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
