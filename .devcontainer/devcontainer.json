@@ -11,5 +11,10 @@
         }
     },
     "forwardPorts": [6081],
-    "extensions": ["GitHub.copilot"]
+    "extensions": [
+      "GitHub.copilot"
+    ],
+    "tasks": {
+      "build": "./gradlew build"
+    }
 }

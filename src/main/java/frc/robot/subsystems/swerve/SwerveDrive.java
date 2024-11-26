@@ -105,6 +105,10 @@ public class SwerveDrive extends SubsystemBase {
       config = null;
     }
 
+    if (config == null) {
+      System.out.println("Using default configuration for SwerveDrive.");
+    }
+
     isSlowMode = false;
     try {
       gyroSubsystem = new Gyro();
