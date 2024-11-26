@@ -3,6 +3,7 @@ import java.sql.Driver;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -40,7 +41,7 @@ import frc.robot.commands.swerve.*;
 
 
 
-/*
+/**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
@@ -48,7 +49,17 @@ import frc.robot.commands.swerve.*;
  */
 public class RobotContainer {
 
-  protected final SwerveDrive m_robotDrive = new SwerveDrive();
+  protected final SwerveDrive m_robotDrive;
+  {
+    try {
+      m_robotDrive = new SwerveDrive();
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to initialize SwerveDrive: " + e.getMessage(), e);
+    }
+    catch (org.json.simple.parser.ParseException e) {
+      throw new RuntimeException("Failed to initialize SwerveDrive: " + e.getMessage(), e);
+    }
+  }
   private final Intake m_intake = new Intake();
   private final preRoller m_preRoller = new preRoller();
   protected final Shooter m_shooter = new Shooter(false);

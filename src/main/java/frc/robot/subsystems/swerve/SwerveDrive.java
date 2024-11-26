@@ -89,15 +89,22 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Initializes a new instance of the SwerveDrive class.
-   * @throws ParseException 
-   * @throws IOException 
    */
   public SwerveDrive() throws IOException, ParseException {
 
 
 
+    try {
+      config = RobotConfig.fromGUISettings();
+    } catch (IOException e) {
+      System.out.println("Warning: Robot configuration not found. Using default configuration.");
+      config = null;
+    }
+    catch (ParseException e) {
+      System.out.println("Warning: Robot configuration not found. Using default configuration.");
+      config = null;
+    }
 
-    config = RobotConfig.fromGUISettings();
     isSlowMode = false;
     try {
       gyroSubsystem = new Gyro();
