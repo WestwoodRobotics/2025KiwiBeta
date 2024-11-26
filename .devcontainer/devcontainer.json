@@ -10,7 +10,7 @@
             "version": "latest"
         }
     },
-    "forwardPorts": [6081],
+    "forwardPorts": [6080],
     "extensions": [
       "GitHub.copilot"
     ],

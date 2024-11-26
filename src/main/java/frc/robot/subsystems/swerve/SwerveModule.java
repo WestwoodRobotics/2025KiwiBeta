@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 //import com.revrobotics.spark.config.SparkBaseConfig.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import CustomLibs.QualityOfLife.NeoSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -21,8 +22,8 @@ import frc.robot.Constants.ModuleConstants;
  * including motor control, encoder feedback, and state management.
  */
 public class SwerveModule {
-    private final SparkMax drivingMotorController;
-    private final SparkMax turningMotorController;
+    private final NeoSparkMax drivingMotorController;
+    private final NeoSparkMax turningMotorController;
 
     private final RelativeEncoder drivingMotorEncoder;
     private final AbsoluteEncoder turningMotorEncoder;
@@ -41,8 +42,8 @@ public class SwerveModule {
      * @param chassisAngularOffset The angular offset of the module relative to the robot chassis.
      */
     public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-        drivingMotorController = new SparkMax(drivingCANId, SparkMax.MotorType.kBrushless);
-        turningMotorController = new SparkMax(turningCANId, SparkMax.MotorType.kBrushless);
+        drivingMotorController = new NeoSparkMax(drivingCANId, SparkMax.MotorType.kBrushless);
+        turningMotorController = new NeoSparkMax(turningCANId, SparkMax.MotorType.kBrushless);
 
         // Configure driving motor
         SparkMaxConfig drivingConfig = new SparkMaxConfig();

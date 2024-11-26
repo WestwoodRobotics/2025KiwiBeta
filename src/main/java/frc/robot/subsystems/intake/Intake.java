@@ -4,10 +4,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.UtilityConstants;
+import frc.robot.subsystems.utils.SparkModels;
 
 import com.revrobotics.spark.SparkMax;
+
+import CustomLibs.QualityOfLife.NeoSpark;
+
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+
+
 
 /**
  * The Intake class represents the intake subsystem of the robot.
@@ -15,7 +22,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
  * stop the motor, and get the motor's RPM.
  */
 public class Intake extends SubsystemBase {
-    private SparkBase intakeMotor;
+    private NeoSpark intakeMotor;
     private PIDController PIDController;
 
     /**
@@ -23,7 +30,7 @@ public class Intake extends SubsystemBase {
      * Initializes the intake motor and PID controller.
      */
     public Intake() {
-        intakeMotor = new SparkMax(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless); 
+        intakeMotor = new NeoSpark(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless, SparkModels.SparkMax); 
         this.PIDController = new PIDController(IntakeConstants.kP, 
                                                IntakeConstants.kI, 
                                                IntakeConstants.kD);

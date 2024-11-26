@@ -7,6 +7,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import CustomLibs.QualityOfLife.NeoSparkFlex;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.UtilityConstants;
 import edu.wpi.first.math.controller.PIDController;
@@ -20,8 +21,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class Shooter extends SubsystemBase {
 
-    private SparkFlex topRoller;
-    private SparkFlex bottomRoller;
+    private NeoSparkFlex topRoller;
+    private NeoSparkFlex bottomRoller;
 
     private boolean isPIDControl;
 
@@ -39,8 +40,8 @@ public class Shooter extends SubsystemBase {
      * @param isPIDControl Whether to use PID control for the shooter.
      */
     public Shooter(boolean isPIDControl) {
-        topRoller = new SparkFlex(ShooterConstants.kTopRollerPort, MotorType.kBrushless);
-        bottomRoller = new SparkFlex(ShooterConstants.kBottomRollerPort, MotorType.kBrushless);
+        topRoller = new NeoSparkFlex(ShooterConstants.kTopRollerPort, MotorType.kBrushless);
+        bottomRoller = new NeoSparkFlex(ShooterConstants.kBottomRollerPort, MotorType.kBrushless);
         this.isPIDControl = isPIDControl;
 
         // Create a configuration object for the rollers
