@@ -52,6 +52,6 @@ public class Axe extends SubsystemBase {
 
     @Override
     public void periodic(){
-        System.out.println(this.getAxePosition());
+        //System.out.println(this.getAxePosition());
     }
 }

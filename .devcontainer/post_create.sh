@@ -3,9 +3,9 @@
 echo "Post-create script starting..."
 
 # Install OpenJDK 21
-echo "Installing OpenJDK 21..."
+echo "Installing OpenJDK 17..."
 sudo apt-get update
-sudo apt-get install -y openjdk-21-jre
+sudo apt-get install -y openjdk-17-jre
 
 # URL of the WPILib installer
 URL="https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz"

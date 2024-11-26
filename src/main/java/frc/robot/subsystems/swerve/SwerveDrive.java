@@ -91,9 +91,6 @@ public class SwerveDrive extends SubsystemBase {
    * Initializes a new instance of the SwerveDrive class.
    */
   public SwerveDrive() throws IOException, ParseException {
-
-
-
     try {
       config = RobotConfig.fromGUISettings();
     } catch (IOException e) {
@@ -143,6 +140,7 @@ public class SwerveDrive extends SubsystemBase {
         },
         this); // Reference to this subsystem to set requirements
     }
+  }
   
 
   /**

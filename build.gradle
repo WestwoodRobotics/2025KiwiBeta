@@ -6,6 +6,11 @@ plugins {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+
+    tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
