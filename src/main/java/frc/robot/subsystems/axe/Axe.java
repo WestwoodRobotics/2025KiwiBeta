@@ -3,6 +3,9 @@ package frc.robot.subsystems.axe;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import CustomLibs.QualityOfLife.NeoSparkMax;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
@@ -12,12 +15,12 @@ import frc.robot.Constants.AxeConstants;
 
 public class Axe extends SubsystemBase {
 
-    private SparkMax axeMotor;
+    private NeoSparkMax axeMotor;
     private PIDController axePIDController;
     private double encoderOffset;
 
     public Axe() {
-        this.axeMotor = new SparkMax(AxeConstants.kAxeMotorPort, SparkMax.MotorType.kBrushless);
+        this.axeMotor = new NeoSparkMax(AxeConstants.kAxeMotorPort, SparkMax.MotorType.kBrushless);
         this.axePIDController = new PIDController(AxeConstants.kP, AxeConstants.kI, AxeConstants.kD);
         
         // Create and apply motor configuration
