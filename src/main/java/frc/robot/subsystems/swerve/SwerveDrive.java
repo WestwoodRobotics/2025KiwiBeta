@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.json.JSONObject;
+
 
 /**
  * Represents the swerve drive system. This subsystem includes methods to drive the robot using joystick inputs,
@@ -90,22 +90,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public SwerveDrive() {
 
-    // Check if settings.json exists, if not create it with default values
-    File settingsFile = new File("src/main/deploy/pathplanner/settings.json");
-    if (!settingsFile.exists()) {
-      try {
-        settingsFile.createNewFile();
-        JSONObject defaultSettings = new JSONObject();
-        defaultSettings.put("isHolonomic", true);
-        defaultSettings.put("maxVelocity", 3.0);
-        defaultSettings.put("maxAcceleration", 2.0);
-        FileWriter writer = new FileWriter(settingsFile);
-        writer.write(defaultSettings.toString());
-        writer.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
+
 
     try{
       config = RobotConfig.fromGUISettings();
