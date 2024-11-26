@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.json.simple.parser.ParseException;
+
 
 /**
  * Represents the swerve drive system. This subsystem includes methods to drive the robot using joystick inputs,
@@ -87,23 +89,15 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Initializes a new instance of the SwerveDrive class.
+   * @throws ParseException 
+   * @throws IOException 
    */
-  public SwerveDrive() {
+  public SwerveDrive() throws IOException, ParseException {
 
 
 
-    try{
-      config = RobotConfig.fromGUISettings();
-      if (config == null) {
-        System.out.println("Warning: RobotConfig is null. Initializing with default values.");
-        config = new RobotConfig();
-      }
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-      System.out.println("Warning: Failed to initialize RobotConfig. Initializing with default values.");
-      config = new RobotConfig();
-    }
+
+    config = RobotConfig.fromGUISettings();
     isSlowMode = false;
     try {
       gyroSubsystem = new Gyro();
