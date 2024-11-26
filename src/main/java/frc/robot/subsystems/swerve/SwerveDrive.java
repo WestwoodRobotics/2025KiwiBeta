@@ -94,9 +94,15 @@ public class SwerveDrive extends SubsystemBase {
 
     try{
       config = RobotConfig.fromGUISettings();
+      if (config == null) {
+        System.out.println("Warning: RobotConfig is null. Initializing with default values.");
+        config = new RobotConfig();
+      }
     } catch (Exception e) {
       // Handle exception as needed
       e.printStackTrace();
+      System.out.println("Warning: Failed to initialize RobotConfig. Initializing with default values.");
+      config = new RobotConfig();
     }
     isSlowMode = false;
     try {
