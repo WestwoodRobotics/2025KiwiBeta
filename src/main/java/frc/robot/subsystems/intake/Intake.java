@@ -8,10 +8,13 @@ import frc.robot.subsystems.utils.SparkModels;
 
 import com.revrobotics.spark.SparkMax;
 
-import CustomLibs.QualityOfLife.NeoSpark;
+
+import CustomLibs.QualityOfLife.NeoSparkBase;
+import CustomLibs.QualityOfLife.NeoSparkMax;
+import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
 
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 
 
 
@@ -22,7 +25,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
  * stop the motor, and get the motor's RPM.
  */
 public class Intake extends SubsystemBase {
-    private NeoSpark intakeMotor;
+    private NeoSparkBase intakeMotor;
     private PIDController PIDController;
 
     /**
@@ -30,7 +33,7 @@ public class Intake extends SubsystemBase {
      * Initializes the intake motor and PID controller.
      */
     public Intake() {
-        intakeMotor = new NeoSpark(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless, SparkModels.SparkMax); 
+        intakeMotor = new NeoSparkMax(IntakeConstants.kIntakeMotorPort, MotorType.kBrushless); 
         this.PIDController = new PIDController(IntakeConstants.kP, 
                                                IntakeConstants.kI, 
                                                IntakeConstants.kD);

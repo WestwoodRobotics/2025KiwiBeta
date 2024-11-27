@@ -5,12 +5,16 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-//import com.revrobotics.spark.config.SparkBaseConfig.ResetMode;
+
+
+import CustomLibs.QualityOfLife.NeoSparkBase.PersistMode;
+import CustomLibs.QualityOfLife.NeoSparkBase.ResetMode;
+import CustomLibs.QualityOfLife.NeoSparkClosedLoopController;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
+import CustomLibs.QualityOfLife.NeoSparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -28,8 +32,8 @@ public class SwerveModule {
     private final RelativeEncoder drivingMotorEncoder;
     private final AbsoluteEncoder turningMotorEncoder;
 
-    private final SparkClosedLoopController drivingMotorPIDController;
-    private final SparkClosedLoopController turningMotorPIDController;
+    private final NeoSparkClosedLoopController drivingMotorPIDController;
+    private final NeoSparkClosedLoopController turningMotorPIDController;
 
     private double moduleChassisAngularOffset = 0;
     private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
@@ -42,11 +46,11 @@ public class SwerveModule {
      * @param chassisAngularOffset The angular offset of the module relative to the robot chassis.
      */
     public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-        drivingMotorController = new NeoSparkMax(drivingCANId, SparkMax.MotorType.kBrushless);
-        turningMotorController = new NeoSparkMax(turningCANId, SparkMax.MotorType.kBrushless);
+        drivingMotorController = new NeoSparkMax(drivingCANId, NeoSparkMax.MotorType.kBrushless);
+        turningMotorController = new NeoSparkMax(turningCANId, NeoSparkMax.MotorType.kBrushless);
 
         // Configure driving motor
-        SparkMaxConfig drivingConfig = new SparkMaxConfig();
+        NeoSparkMaxConfig drivingConfig = new NeoSparkMaxConfig();
         drivingConfig.encoder
                 .positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor)
                 .velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
@@ -61,7 +65,7 @@ public class SwerveModule {
 
         // Configure turning motor
         // In SwerveModule.java constructor
-        SparkMaxConfig turningConfig = new SparkMaxConfig();
+        NeoSparkMaxConfig turningConfig = new NeoSparkMaxConfig();
         turningConfig.encoder
             .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
             .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);

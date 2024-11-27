@@ -1,7 +1,8 @@
 package frc.robot;
 
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
 
 
 import edu.wpi.first.math.geometry.Translation2d;

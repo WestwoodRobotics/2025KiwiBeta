@@ -1,17 +1,23 @@
 package frc.robot.subsystems.axe;
 
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.PersistMode;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
+import CustomLibs.QualityOfLife.NeoSparkMaxConfig;
+import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AxeConstants;
+
+import CustomLibs.QualityOfLife.NeoSparkBase.PersistMode;
+import CustomLibs.QualityOfLife.NeoSparkBase.ResetMode;
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig;
 
 public class Axe extends SubsystemBase {
 
@@ -20,15 +26,14 @@ public class Axe extends SubsystemBase {
     private double encoderOffset;
 
     public Axe() {
-        this.axeMotor = new NeoSparkMax(AxeConstants.kAxeMotorPort, SparkMax.MotorType.kBrushless);
+        this.axeMotor = new NeoSparkMax(AxeConstants.kAxeMotorPort, NeoSparkMax.MotorType.kBrushless);
         this.axePIDController = new PIDController(AxeConstants.kP, AxeConstants.kI, AxeConstants.kD);
         
         // Create and apply motor configuration
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.idleMode(IdleMode.kCoast);
+        //NeoSparkBaseConfig config = axeMotor.getCurrentConfig();
         
         // Apply the configuration to the motor
-        axeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //axeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
         encoderOffset = 0;
     }
