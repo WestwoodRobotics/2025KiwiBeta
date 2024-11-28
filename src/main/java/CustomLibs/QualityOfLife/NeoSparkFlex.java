@@ -67,8 +67,9 @@ import frc.robot.subsystems.utils.SparkModels;
      super(deviceId, type, SparkModels.SparkFlex);
      current_config = new NeoSparkFlexConfig();
      configAccessor = new SparkFlexConfigAccessor(sparkHandle);
+     sparkHandle = CANSparkJNI.c_Spark_Create(deviceId, type.value, SparkModels.SparkFlex.id);
  
-     if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModel.SparkFlex.id) {
+     if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkFlex.id) {
        DriverStation.reportWarning(
            "CANSparkFlex object created for CAN ID "
                + deviceId
