@@ -7,6 +7,9 @@ echo "Installing OpenJDK 17..."
 sudo apt-get update
 sudo apt-get install -y openjdk-17-jre
 
+sudo apt-get update
+sudo apt-get install -y libatomic1
+
 # URL of the WPILib installer
 URL="https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz"
 
@@ -36,6 +39,8 @@ if [ ! -d "$HOME/wpilib/$YEAR" ]; then
     sudo mkdir -p ~/wpilib
     sudo mv "$YEAR" ~/wpilib
     sudo rm -rf WPILib_Linux-*
+    sudo rm -rf ~/.gradle/caches/
+    sudo rm -rf ~/wpilib/2025/maven/
     # Run ToolsUpdater.py
     cd ~/wpilib/"$YEAR"/tools/ && sudo python3 ToolsUpdater.py
 
