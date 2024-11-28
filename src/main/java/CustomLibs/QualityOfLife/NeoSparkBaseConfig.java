@@ -505,6 +505,10 @@ import com.revrobotics.spark.config.SoftLimitConfig;
     }
     return (Float) getParameter(SparkParameter.kSmartCurrentStallLimit.value);
    }
+
+   public NeoClosedLoopConfig getClosedLoopConfig() {
+    return closedLoop;
+   }
    
 
    

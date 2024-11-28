@@ -159,6 +159,10 @@ import frc.robot.subsystems.utils.SparkModels;
  
      return status;
    }
+
+   public REVLibError configCurrentConfig() {
+     return configure(current_config);
+   }
  
    private void checkDataPortAlternateEncoder() {
      throwIfClosed();
@@ -169,6 +173,8 @@ import frc.robot.subsystems.utils.SparkModels;
            "The SPARK MAX is not configured to use an alternate encoder.");
      }
    }
+
+
  
    private void checkDataPortAbsoluteEncoder() {
      throwIfClosed();
@@ -237,6 +243,19 @@ import frc.robot.subsystems.utils.SparkModels;
    }
 
    public void setPIDF(double kP, double kI, double kD, double kF) {
+    if (getClosedLoopController().getP() != kP ||
+        getClosedLoopController().getI() != kI ||
+        getClosedLoopController().getD() != kD ||
+        getClosedLoopController().getF() != kF) 
+    {
+      setPID(kP, kI, kD);
+      current_config.closedLoop.f(kF);
+    }
+    //configure(current_config);
+  }
+
+
+  public void setPID(double kP, double kI, double kD) {
     if(getClosedLoopController().getP() != kP) {
       current_config.closedLoop.p(kP);
     }
@@ -248,12 +267,9 @@ import frc.robot.subsystems.utils.SparkModels;
       current_config.closedLoop.d(kD);
       
     }
-    if(getClosedLoopController().getF() != kF) {
-      current_config.closedLoop.f(kF);
-      
-    }
-    configure(current_config);
+    //configure(current_config);
   }
+
 
   public void setOutputRange(double min, double max) {
     if(getClosedLoopController().getOutputRangeMin() != min) {

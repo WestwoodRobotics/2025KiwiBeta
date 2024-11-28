@@ -30,12 +30,15 @@ package CustomLibs.QualityOfLife;
 
 import java.util.ArrayList;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.MAXMotionConfig;
+import CustomLibs.QualityOfLife.NeoMAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SmartMotionConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.ClosedLoopSlot;
 
 public class NeoClosedLoopConfig extends NeoBaseConfig {
    public final SmartMotionConfig smartMotion = new SmartMotionConfig();
-   public final MAXMotionConfig maxMotion = new MAXMotionConfig();
+   public NeoMAXMotionConfig maxMotion = new NeoMAXMotionConfig();
  
    public enum FeedbackSensor {
      kNoSensor(0),
@@ -121,7 +124,7 @@ public class NeoClosedLoopConfig extends NeoBaseConfig {
     * @param config The {@link MAXMotionConfig} to copy settings from
     * @return The updated {@link NeoClosedLoopConfig} for method chaining
     */
-   public NeoClosedLoopConfig apply(MAXMotionConfig config) {
+   public NeoClosedLoopConfig apply(NeoMAXMotionConfig config) {
      this.maxMotion.apply(config);
      return this;
    }
@@ -560,6 +563,101 @@ public class NeoClosedLoopConfig extends NeoBaseConfig {
     }
     return ((Float) getParameter(SparkParameter.kPositionPIDMaxInput.value)).doubleValue();
   }
+
+  public NeoMAXMotionConfig getMaxMotionConfig() {
+    return maxMotion;
+  }
+
+  public void setMAXMotionConfig(NeoMAXMotionConfig maxMotion) {
+    //this.maxMotion.apply(maxMotion);
+    if (this.maxMotion == null) {
+      this.maxMotion = maxMotion;
+    }
+    else if (!(this.maxMotion.equals(maxMotion))) {
+      this.maxMotion.apply(maxMotion);
+    }
+  }
+
+  public void setMAXMotionMaxAcceleration(double maxAcceleration) {
+    if (this.maxMotion == null) {
+      this.maxMotion = new NeoMAXMotionConfig();
+      this.maxMotion.maxAcceleration(maxAcceleration);
+    }
+    else if (this.maxMotion.getMaxAcceleration() != maxAcceleration) {
+      this.maxMotion.maxAcceleration(maxAcceleration);
+    }
+  }
+
+  public void setMAXMotionMaxVelocity(double maxVelocity) {
+    if (this.maxMotion == null) {
+      this.maxMotion = new NeoMAXMotionConfig();
+      this.maxMotion.maxVelocity(maxVelocity);
+    }
+    else if (this.maxMotion.getMaxVelocity() != maxVelocity) {
+      this.maxMotion.maxVelocity(maxVelocity);
+    }
+  }
+
+  public void setAllowedClosedLoopError(double allowedError) {
+    if (this.maxMotion == null) {
+      this.maxMotion = new NeoMAXMotionConfig();
+      this.maxMotion.allowedClosedLoopError(allowedError);
+    }
+    else if (this.maxMotion.getAllowedClosedLoopError() != allowedError) {
+      this.maxMotion.allowedClosedLoopError(allowedError);
+    }
+  }
+
+  public void setMAXMotionPositionMode(MAXMotionPositionMode mode) {
+    if (this.maxMotion == null) {
+      this.maxMotion = new NeoMAXMotionConfig();
+      this.maxMotion.positionMode(mode);
+    }
+    else if (this.maxMotion.getPositionMode() != mode) {
+      this.maxMotion.positionMode(mode);
+    }
+  }
+
+  public double getMAXMotionMaxAcceleration() {
+    return this.maxMotion.getMaxAcceleration();
+  }
+
+  public double getMAXMotionMaxAcceleration(ClosedLoopConfig.ClosedLoopSlot slot) {
+    return this.maxMotion.getMaxAcceleration(slot);
+  }
+
+  public double getMAXMotionMaxVelocity() {
+    return this.maxMotion.getMaxVelocity();
+  }
+
+  public double getMAXMotionMaxVelocity(ClosedLoopConfig.ClosedLoopSlot slot) {
+    return this.maxMotion.getMaxVelocity(slot);
+  }
+
+  public double getAllowedClosedLoopError() {
+    return this.maxMotion.getAllowedClosedLoopError();
+  }
+
+  public double getAllowedClosedLoopError(ClosedLoopConfig.ClosedLoopSlot slot) {
+    return this.maxMotion.getAllowedClosedLoopError(slot);
+  }
+
+  public MAXMotionPositionMode getMAXMotionPositionMode() {
+    return this.maxMotion.getPositionMode();
+  }
+
+  public MAXMotionPositionMode getMAXMotionPositionMode(ClosedLoopConfig.ClosedLoopSlot slot) {
+    return this.maxMotion.getPositionMode(slot);
+  }
+
+  
+
+
+
+
+
+  
+
 
   
  }

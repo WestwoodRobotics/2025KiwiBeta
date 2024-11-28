@@ -226,9 +226,12 @@ public final class Constants {
   public static final class AxeConstants {
     public static final int kAxeMotorPort = 20;
 
-public static final double kP = .15;
+    public static final double kP = .15;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static final double kMAXMotionMaxAcceleration = 1000;
+    public static final double kMAXMotionMaxVelocity = 1000;
 
     // figure these out
     public static final double kAxeDownPosition = 31;
