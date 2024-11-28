@@ -37,13 +37,16 @@ import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMaxAlternateEncoder;
 import com.revrobotics.spark.config.SparkBaseConfig;
  import com.revrobotics.spark.config.SparkMaxConfigAccessor;
- import edu.wpi.first.wpilibj.DriverStation;
+
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.utils.SparkModels;
  
- public class NeoSparkMax extends NeoSparkBase {
+  public class NeoSparkMax extends NeoSparkBase {
    private NeoSparkMaxAlternateEncoder altEncoder;
    private NeoSparkBaseConfig current_config;
    private final Object altEncoderLock = new Object();
+   protected long sparkHandle;
  
    // package-private
    enum DataPortConfig {
@@ -77,7 +80,10 @@ import frc.robot.subsystems.utils.SparkModels;
     */
    public NeoSparkMax(int deviceId, MotorType type) {
      super(deviceId, type, SparkModels.SparkMax);
+     current_config = new NeoSparkMaxConfig();
      configAccessor = new SparkMaxConfigAccessor(sparkHandle);
+     sparkHandle = CANSparkJNI.c_Spark_Create(deviceId, type.value, SparkModel.SparkMax.id);
+
     
      if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkMax.id) {
        DriverStation.reportWarning(
@@ -229,5 +235,128 @@ import frc.robot.subsystems.utils.SparkModels;
    public NeoSparkBaseConfig getCurrentConfig() {
      return current_config;
    }
+
+   public void setPIDF(double kP, double kI, double kD, double kF) {
+    if(getClosedLoopController().getP() != kP) {
+      current_config.closedLoop.p(kP);
+    }
+    if(getClosedLoopController().getI() != kI) {
+      current_config.closedLoop.i(kI);
+      
+    }
+    if(getClosedLoopController().getD() != kD) {
+      current_config.closedLoop.d(kD);
+      
+    }
+    if(getClosedLoopController().getF() != kF) {
+      current_config.closedLoop.f(kF);
+      
+    }
+    configure(current_config);
+  }
+
+  public void setOutputRange(double min, double max) {
+    if(getClosedLoopController().getOutputRangeMin() != min) {
+      current_config.closedLoop.minOutput(min);
+    }
+    if(getClosedLoopController().getOutputRangeMax() != max) {
+      current_config.closedLoop.maxOutput(max);
+    }
+    configure(current_config);
+  }
+
+  public void setIdleMode(IdleMode mode) {
+    if(getIdleMode() != mode) {
+      current_config.idleMode(mode);
+    }
+    configure(current_config);
+  }
+
+  public IdleMode getIdleMode() {
+    return current_config.getIdleMode();
+  }
+
+
+  public void setSmartCurrentLimit(int limit) {
+    if(getSmartCurrentLimit() != limit) {
+      current_config.smartCurrentLimit(limit);
+    }
+    configure(current_config);
+  }
+
+  public double getSmartCurrentLimit() {
+    return current_config.getSmartCurrentLimit();
+  }
+
+  public void setPositionConversionFactor(double factor) {
+    if(getPositionConversionFactor() != factor) {
+      current_config.encoder.positionConversionFactor(factor);
+    }
+    configure(current_config);
+  }
+
+  public double getPositionConversionFactor() {
+    return current_config.encoder.getPositionConversionFactor();
+  }
+
+  public void setVelocityConversionFactor(double factor) {
+    if(getVelocityConversionFactor() != factor) {
+      current_config.encoder.velocityConversionFactor(factor);
+    }
+    configure(current_config);
+  }
+
+  public double getVelocityConversionFactor() {
+    return current_config.encoder.getVelocityConversionFactor();
+  }
+
+  public void setPositionWrappingEnabled(boolean enabled) {
+    if(isPositionWrappingEnabled() != enabled) {
+      current_config.closedLoop.positionWrappingEnabled(enabled);
+    }
+    configure(current_config);
+  }
+
+  public boolean isPositionWrappingEnabled() {
+    return current_config.closedLoop.isPositionWrappingEnabled();
+  }
+
+
+  public void setPositionWrappingInputRange(double min, double max) {
+    if(getPositionWrappingInputRangeMin() != min) {
+      current_config.closedLoop.positionWrappingInputRange(min, getPositionWrappingInputRangeMax());
+    }
+    if(getPositionWrappingInputRangeMax() != max) {
+      current_config.closedLoop.positionWrappingInputRange(getPositionWrappingInputRangeMin(), max);
+    }
+    configure(current_config);
+  }
+
+  public void setPositionInputRangeMin(double min) {
+    if(getPositionWrappingInputRangeMin() != min) {
+      current_config.closedLoop.positionWrappingInputRange(min, getPositionWrappingInputRangeMax());
+    }
+    configure(current_config);
+  }
+
+  public void setPositionInputRangeMax(double max) {
+    if(getPositionWrappingInputRangeMax() != max) {
+      current_config.closedLoop.positionWrappingInputRange(getPositionWrappingInputRangeMin(), max);
+    }
+    configure(current_config);
+  }
+
+  public double getPositionWrappingInputRangeMin() {
+    return current_config.closedLoop.getPositionWrappingInputRangeMin();
+  }
+
+  public double getPositionWrappingInputRangeMax() {
+    return current_config.closedLoop.getPositionWrappingInputRangeMax();
+  }
+
+
+
+
+
  }
  

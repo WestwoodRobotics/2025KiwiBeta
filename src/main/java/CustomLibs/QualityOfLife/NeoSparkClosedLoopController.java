@@ -28,7 +28,10 @@
 
  package CustomLibs.QualityOfLife;
 
- import com.revrobotics.REVLibError;
+ import java.util.ArrayList;
+import java.util.LinkedList;
+
+import com.revrobotics.REVLibError;
  import com.revrobotics.jni.CANSparkJNI;
 import com.revrobotics.spark.SparkBase;
 
@@ -175,5 +178,122 @@ import CustomLibs.QualityOfLife.NeoSparkBase.ControlType;
      spark.throwIfClosed();
      return CANSparkJNI.c_Spark_GetIAccum(spark.sparkHandle);
    }
+
+    /**
+    * Get the P value of the closed loop controller. This is useful when wishing to see what
+    * the P value is to help with PID tuning
+    *
+    * @return The value of the P value
+    */
+    public double getP() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kP_0.value);
+    }
+
+    public double getP(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kP_0.value + (8*slot));
+    }
+
+
+    /**
+     * Get the I value of the closed loop controller. This is useful when wishing to see what
+     * the I value is to help with PID tuning
+     * 
+     * @return The value of the I value
+     */
+    public double getI() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kI_0.value);
+    }
+
+    public double getI(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kI_0.value + (8*slot));
+    }
+
+    /**
+     * Get the D value of the closed loop controller. This is useful when wishing to see what
+     * the D value is to help with PID tuning
+     * 
+     * @return The value of the D value
+     */
+    public double getD() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kD_0.value);
+    }
+
+    public double getD(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kD_0.value + (8*slot));
+    }
+    /**
+     * Get the F value of the closed loop controller. This is useful when wishing to see what
+     * the F value is to help with PID tuning
+     * 
+     * @return The value of the F value
+     */
+    public double getF() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kF_0.value);
+    }
+
+    public double getF(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kF_0.value + (8*slot));
+    }
+
+
+    /**
+     * Get the PIDF values of the closed loop controller. This is useful when wishing to see what
+     * the PIDF values are to help with PID tuning
+     * 
+     * @return The values of the PIDF values
+     */
+
+    public LinkedList<Double> getPIDF() {
+      LinkedList<Double> pidf = new LinkedList<>();
+      pidf.add(getP());
+      pidf.add(getI());
+      pidf.add(getD());
+      pidf.add(getF());
+      return pidf;
+    }
+
+    public LinkedList<Double> getPIDF(int slot) {
+      LinkedList<Double> pidf = new LinkedList<>();
+      pidf.add(getP(slot));
+      pidf.add(getI(slot));
+      pidf.add(getD(slot));
+      pidf.add(getF(slot));
+      return pidf;
+    }
+
+    public double getOutputRangeMin() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kOutputMin_0.value);
+    }
+
+    public double getOutputRangeMin(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kOutputMin_0.value + (8*slot));
+    }
+
+    public double getOutputRangeMax() {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kOutputMax_0.value);
+    }
+
+    public double getOutputRangeMax(int slot) {
+      spark.throwIfClosed();
+      return CANSparkJNI.c_Spark_GetParameterFloat32(spark.sparkHandle, SparkParameter.kOutputMax_0.value + (8*slot));
+    }
+
+
+
+
+
+    
+
  }
  

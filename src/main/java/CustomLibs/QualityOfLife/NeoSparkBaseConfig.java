@@ -43,15 +43,16 @@ import com.revrobotics.spark.config.SoftLimitConfig;
  public abstract class NeoSparkBaseConfig extends NeoBaseConfig {
    public final NeoAbsoluteEncoderConfig absoluteEncoder = new NeoAbsoluteEncoderConfig();
    public final AnalogSensorConfig analogSensor = new AnalogSensorConfig();
-   public final EncoderConfig encoder = new EncoderConfig();
+   public final NeoEncoderConfig encoder = new NeoEncoderConfig();
    public final NeoLimitSwitchConfig limitSwitch = new NeoLimitSwitchConfig();
    public final SoftLimitConfig softLimit = new SoftLimitConfig();
-   public final ClosedLoopConfig closedLoop = new ClosedLoopConfig();
+   public final NeoClosedLoopConfig closedLoop = new NeoClosedLoopConfig();
    public final SignalsConfig signals = new SignalsConfig();
  
    public enum IdleMode {
      kCoast(0),
      kBrake(1);
+     
  
      @SuppressWarnings("MemberName")
      public final int value;
@@ -127,7 +128,7 @@ import com.revrobotics.spark.config.SoftLimitConfig;
     * @param config The {@link EncoderConfig} to copy settings from
     * @return The updated {@link NeoSparkBaseConfig} for method chaining
     */
-   public NeoSparkBaseConfig apply(EncoderConfig config) {
+   public NeoSparkBaseConfig apply(NeoEncoderConfig config) {
      this.encoder.apply(config);
      return this;
    }
@@ -169,7 +170,7 @@ import com.revrobotics.spark.config.SoftLimitConfig;
     * @param config The {@link ClosedLoopConfig} to copy settings from
     * @return The updated {@link NeoSparkBaseConfig} for method chaining
     */
-   public NeoSparkBaseConfig apply(ClosedLoopConfig config) {
+   public NeoSparkBaseConfig apply(NeoClosedLoopConfig config) {
      this.closedLoop.apply(config);
      return this;
    }
@@ -490,4 +491,21 @@ import com.revrobotics.spark.config.SoftLimitConfig;
  
      return flattenedString;
    }
+
+   public IdleMode getIdleMode() {
+    if ((Integer) getParameter(SparkParameter.kIdleMode.value) == null){
+      return IdleMode.kCoast;
+    }
+    return IdleMode.fromId((Integer) getParameter(SparkParameter.kIdleMode.value));
+   }
+
+   public double getSmartCurrentLimit() {
+    if (getParameter(SparkParameter.kSmartCurrentStallLimit.value) == null){
+      return -999; //Some insane value
+    }
+    return (Float) getParameter(SparkParameter.kSmartCurrentStallLimit.value);
+   }
+   
+
+   
  }

@@ -289,6 +289,9 @@ import frc.robot.subsystems.utils.SparkModels;
      return status;
    }
  
+
+
+   
    /**
     * Returns an object for interfacing with the encoder connected to the encoder pins or front port
     * of the SPARK MAX or the motor interface of the SPARK Flex.

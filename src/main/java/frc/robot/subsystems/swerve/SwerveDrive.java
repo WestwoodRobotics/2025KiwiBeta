@@ -66,10 +66,6 @@ public class SwerveDrive extends SubsystemBase {
       PortConstants.kRearRightTurningCanId,
       DriveConstants.kRearRightChassisAngularOffset);
 
-  // Slew rate limiters to control acceleration
-  private SlewRateLimiter translationRateLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
-  private SlewRateLimiter rotationRateLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
-
   // Odometry class for tracking robot pose
   SwerveDriveOdometry swerveDriveOdometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,

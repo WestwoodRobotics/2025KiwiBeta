@@ -1,11 +1,11 @@
 package frc.robot.subsystems.Shooter;
 
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+
+import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
+
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
+
+
 
 import CustomLibs.QualityOfLife.NeoSparkFlex;
 import frc.robot.Constants.ShooterConstants;
@@ -42,15 +42,14 @@ public class Shooter extends SubsystemBase {
     public Shooter(boolean isPIDControl) {
         topRoller = new NeoSparkFlex(ShooterConstants.kTopRollerPort, MotorType.kBrushless);
         bottomRoller = new NeoSparkFlex(ShooterConstants.kBottomRollerPort, MotorType.kBrushless);
-        this.isPIDControl = isPIDControl;
 
-        // Create a configuration object for the rollers
-        SparkMaxConfig rollerConfig = new SparkMaxConfig();
-        rollerConfig.idleMode(IdleMode.kBrake);
+        this.isPIDControl = isPIDControl;
+        topRoller.setIdleMode(IdleMode.kBrake);
+        bottomRoller.setIdleMode(IdleMode.kBrake);
 
         // Apply the configuration to the rollers
-        topRoller.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        bottomRoller.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        topRoller.configure(topRoller.getCurrentConfig());
+        bottomRoller.configure(bottomRoller.getCurrentConfig());
 
         this.TopRollerPIDController = new PIDController(
             ShooterConstants.kTopRollerP,
@@ -63,6 +62,8 @@ public class Shooter extends SubsystemBase {
             ShooterConstants.kBottomRollerI,
             ShooterConstants.kBottomRollerD
         );
+
+        
     }
 
     /**

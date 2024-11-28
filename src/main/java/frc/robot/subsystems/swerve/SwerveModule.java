@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import CustomLibs.QualityOfLife.NeoSparkBase.PersistMode;
 import CustomLibs.QualityOfLife.NeoSparkBase.ResetMode;
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig;
 import CustomLibs.QualityOfLife.NeoSparkClosedLoopController;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -47,36 +48,24 @@ public class SwerveModule {
      */
     public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
         drivingMotorController = new NeoSparkMax(drivingCANId, NeoSparkMax.MotorType.kBrushless);
+        drivingMotorController.setPIDF(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD, ModuleConstants.kDrivingFF);
+        drivingMotorController.setOutputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
+        drivingMotorController.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
+        drivingMotorController.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+        drivingMotorController.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+        drivingMotorController.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+        drivingMotorController.configure(drivingMotorController.getCurrentConfig());
+
         turningMotorController = new NeoSparkMax(turningCANId, NeoSparkMax.MotorType.kBrushless);
-
-        // Configure driving motor
-        NeoSparkMaxConfig drivingConfig = new NeoSparkMaxConfig();
-        drivingConfig.encoder
-                .positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor)
-                .velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
-        drivingConfig.closedLoop
-                .pidf(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD, ModuleConstants.kDrivingFF)
-                .outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
-        drivingConfig
-                .idleMode(ModuleConstants.kDrivingMotorIdleMode)
-                .smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-
-        drivingMotorController.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        // Configure turning motor
-        // In SwerveModule.java constructor
-        NeoSparkMaxConfig turningConfig = new NeoSparkMaxConfig();
-        turningConfig.encoder
-            .positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor)
-            .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
-        // Remove the .inverted() call as it's not compatible with brushless mode
-        turningConfig.closedLoop
-            .pidf(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF)
-            .outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput)
-            .positionWrappingEnabled(true)
-            .positionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
-
-        turningMotorController.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        turningMotorController.setPIDF(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF);
+        turningMotorController.setOutputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
+        turningMotorController.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
+        turningMotorController.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+        turningMotorController.setPositionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
+        turningMotorController.setVelocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+        turningMotorController.setPositionWrappingEnabled(true);
+        turningMotorController.setPositionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
+        turningMotorController.configure(turningMotorController.getCurrentConfig());
 
         // Get encoders and PID controllers
         drivingMotorEncoder = drivingMotorController.getEncoder();
@@ -170,4 +159,6 @@ public class SwerveModule {
     public double getTurningEncoderPosition() {
         return turningMotorEncoder.getPosition();
     }
+
+
 }

@@ -28,62 +28,48 @@
 
  package CustomLibs.QualityOfLife;
 
- import com.revrobotics.jni.CANSparkJNI;
- import java.util.HashMap;
- import java.util.Map;
+import com.revrobotics.spark.config.ExternalEncoderConfig;
+
+
+public class NeoSparkFlexConfig extends NeoSparkBaseConfig {
+   public final ExternalEncoderConfig externalEncoder = new ExternalEncoderConfig();
  
- public abstract class NeoBaseConfig {
-   private Map<Integer, Object> parameters = new HashMap<>();
- 
-   // package-private
-   void putParameter(int parameterId, Object value) {
-     parameters.put(parameterId, value);
+   /**
+    * Applies settings from another {@link SparkFlexConfig} to this one, including all of its nested
+    * configurations.
+    *
+    * <p>Settings in the provided config will overwrite existing values in this object. Settings not
+    * specified in the provided config remain unchanged.
+    *
+    * @param config The {@link SparkFlexConfig} to copy settings from
+    * @return The updated {@link SparkFlexConfig} for method chaining
+    */
+   public NeoSparkFlexConfig apply(NeoSparkFlexConfig config) {
+     super.apply(config);
+     this.externalEncoder.apply(config.externalEncoder);
+     return this;
    }
  
-   // package-private
-   Object getParameter(int parameterId) {
-     return parameters.get(parameterId);
+   /**
+    * Applies settings from an {@link ExternalEncoderConfig} to this {@link SparkFlexConfig}.
+    *
+    * <p>Settings in the provided config will overwrite existing values in this object. Settings not
+    * specified in the provided config remain unchanged.
+    *
+    * @param config The {@link ExternalEncoderConfig} to copy settings from
+    * @return The updated {@link SparkFlexConfig} for method chaining
+    */
+   public NeoSparkFlexConfig apply(ExternalEncoderConfig config) {
+     this.externalEncoder.apply(config);
+     return this;
    }
  
-   // package-private
-   void removeParameter(int parameterId) {
-     parameters.remove(parameterId);
-   }
- 
-   // package-private
-   void apply(NeoBaseConfig config) {
-     for (Map.Entry<Integer, Object> parameter : config.parameters.entrySet()) {
-       putParameter(parameter.getKey(), parameter.getValue());
-     }
-   }
- 
+   @Override
    public String flatten() {
      String flattenedString = "";
  
-     for (Map.Entry<Integer, Object> parameter : parameters.entrySet()) {
-       switch (CANSparkJNI.c_Spark_GetParameterType(parameter.getKey())) {
-         case 1:
-           flattenedString +=
-               CANSparkJNI.c_Spark_FlattenParameterInt32(
-                   parameter.getKey(), (int) parameter.getValue());
-           break;
-         case 2:
-           flattenedString +=
-               CANSparkJNI.c_Spark_FlattenParameterUint32(
-                   parameter.getKey(), (int) parameter.getValue());
-           break;
-         case 3:
-           flattenedString +=
-               CANSparkJNI.c_Spark_FlattenParameterFloat(
-                   parameter.getKey(), (float) parameter.getValue());
-           break;
-         case 4:
-           flattenedString +=
-               CANSparkJNI.c_Spark_FlattenParameterBool(
-                   parameter.getKey(), (boolean) parameter.getValue());
-           break;
-       }
-     }
+     flattenedString += super.flatten();
+     flattenedString += externalEncoder.flatten();
  
      return flattenedString;
    }
