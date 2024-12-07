@@ -76,6 +76,7 @@ dependencies {
     simulationRelease wpi.sim.enableRelease()
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testImplementation "org.mockito:mockito-core:5.14.2" 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

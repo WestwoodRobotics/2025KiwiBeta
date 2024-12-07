@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -8,10 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.sensors.NeoADIS16470;
 
 import java.io.IOException;
 
@@ -19,6 +27,9 @@ public class SwerveDriveTest {
 
     @Mock
     private Gyro mockGyro;
+
+    @Mock
+    private NeoADIS16470 mockRawGyroObject;
 
     @Mock
     private SwerveModule mockFrontLeftModule;
@@ -37,7 +48,48 @@ public class SwerveDriveTest {
     @BeforeEach
     public void setup() throws IOException, org.json.simple.parser.ParseException {
         MockitoAnnotations.openMocks(this);
-        swerveDrive = new SwerveDrive(mockGyro, mockFrontLeftModule, mockFrontRightModule, mockRearLeftModule, mockRearRightModule);
+
+        // Mock gyro methods
+        when(mockGyro.getRawGyroObject()).thenReturn(mockRawGyroObject);
+        when(mockRawGyroObject.getZAngle()).thenReturn(0.0);
+        when(mockRawGyroObject.getXAngle()).thenReturn(0.0);
+        when(mockRawGyroObject.getYAngle()).thenReturn(0.0);
+        when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(0));
+
+        // Mock SwerveModule positions
+        when(mockFrontLeftModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
+        when(mockFrontRightModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
+        when(mockRearLeftModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
+        when(mockRearRightModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
+
+        // Mock SwerveModule states
+        when(mockFrontLeftModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
+        when(mockFrontRightModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
+        when(mockRearLeftModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
+        when(mockRearRightModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
+
+        // Create RobotConfig
+        ModuleConfig moduleConfig = new ModuleConfig(10, 10, 10, new DCMotor(10, 10, 10, 10, 10, 1), 10, 10);
+        RobotConfig robotConfig = new RobotConfig(
+            10, // Mass in KG
+            10, // Moment of Inertia in KG*M^2
+            moduleConfig,
+            new Translation2d(10, 10),
+            new Translation2d(10, -10),
+            new Translation2d(-10, 10),
+            new Translation2d(-10, -10)
+        );
+
+        // Initialize SwerveDrive with isTestMode=true to bypass test mode conditionals
+        swerveDrive = new SwerveDrive(
+            mockGyro,
+            mockFrontLeftModule,
+            mockFrontRightModule,
+            mockRearLeftModule,
+            mockRearRightModule,
+            robotConfig,
+            true
+        );
     }
 
     @Test
@@ -62,7 +114,7 @@ public class SwerveDriveTest {
         when(mockRearLeftModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
         when(mockRearRightModule.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
 
-        swerveDrive.periodic();
+        swerveDrive.periodic(); // Ensure odometry is updated
 
         Pose2d pose = swerveDrive.getPose();
         assertEquals(0, pose.getX());
@@ -108,12 +160,27 @@ public class SwerveDriveTest {
 
     @Test
     public void testChassisSpeeds() {
-        when(mockFrontLeftModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
-        when(mockFrontRightModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
-        when(mockRearLeftModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
-        when(mockRearRightModule.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
-
-        assertNotNull(swerveDrive.getRobotRelativeSpeeds());
+        // Set up module states with known speeds and angles
+        SwerveModuleState frontLeftState = new SwerveModuleState(1.0, new Rotation2d(0));
+        SwerveModuleState frontRightState = new SwerveModuleState(1.0, new Rotation2d(0));
+        SwerveModuleState rearLeftState = new SwerveModuleState(1.0, new Rotation2d(0));
+        SwerveModuleState rearRightState = new SwerveModuleState(1.0, new Rotation2d(0));
+        
+        // Mock each module's getState() method to return our test states
+        when(mockFrontLeftModule.getState()).thenReturn(frontLeftState);
+        when(mockFrontRightModule.getState()).thenReturn(frontRightState);
+        when(mockRearLeftModule.getState()).thenReturn(rearLeftState);
+        when(mockRearRightModule.getState()).thenReturn(rearRightState);
+        
+        // Get chassis speeds and verify them
+        ChassisSpeeds speeds = swerveDrive.getRobotRelativeSpeeds();
+        assertNotNull(speeds);
+        
+        // Due to swerve drive kinematics, when all modules are driving forward at 1.0 m/s,
+        // the robot's overall forward speed should be 1.0 m/s
+        assertEquals(1.0, speeds.vxMetersPerSecond, 0.01);
+        assertEquals(0.0, speeds.vyMetersPerSecond, 0.01); // Sideways speed should be 0
+        assertEquals(0.0, speeds.omegaRadiansPerSecond, 0.01); // Angular speed should be 0
     }
 
     @Test
