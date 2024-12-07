@@ -46,47 +46,39 @@ public class SwerveDrive extends SubsystemBase {
   private boolean isSlowMode;
 
   // Swerve modules
-  private final SwerveModule frontLeftSwerveModule = new SwerveModule(
-      PortConstants.kFrontLeftDrivingCanId,
-      PortConstants.kFrontLeftTurningCanId,
-      DriveConstants.kFrontLeftChassisAngularOffset);
-
-  private final SwerveModule frontRightSwerveModule = new SwerveModule(
-      PortConstants.kFrontRightDrivingCanId,
-      PortConstants.kFrontRightTurningCanId,
-      DriveConstants.kFrontRightChassisAngularOffset);
-
-  private final SwerveModule rearLeftSwerveModule = new SwerveModule(
-      PortConstants.kRearLeftDrivingCanId,
-      PortConstants.kRearLeftTurningCanId,
-      DriveConstants.kRearLeftChassisAngularOffset);
-
-  private final SwerveModule rearRightSwerveModule = new SwerveModule(
-      PortConstants.kRearRightDrivingCanId,
-      PortConstants.kRearRightTurningCanId,
-      DriveConstants.kRearRightChassisAngularOffset);
+  private final SwerveModule frontLeftSwerveModule;
+  private final SwerveModule frontRightSwerveModule;
+  private final SwerveModule rearLeftSwerveModule;
+  private final SwerveModule rearRightSwerveModule;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry swerveDriveOdometry = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics,
-      this.getHeadingObject(),
-      new SwerveModulePosition[] {
-          frontLeftSwerveModule.getPosition(),
-          frontRightSwerveModule.getPosition(),
-          rearLeftSwerveModule.getPosition(),
-          rearRightSwerveModule.getPosition()
-      });
+  SwerveDriveOdometry swerveDriveOdometry;
 
   Field2d fieldVisualization;
   private boolean isYuMode;
   private RobotConfig config;
 
-
-
   /**
    * Initializes a new instance of the SwerveDrive class.
    */
   public SwerveDrive() throws IOException, ParseException {
+    this(new Gyro(),
+         new SwerveModule(PortConstants.kFrontLeftDrivingCanId, PortConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
+         new SwerveModule(PortConstants.kFrontRightDrivingCanId, PortConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
+         new SwerveModule(PortConstants.kRearLeftDrivingCanId, PortConstants.kRearLeftTurningCanId, DriveConstants.kRearLeftChassisAngularOffset),
+         new SwerveModule(PortConstants.kRearRightDrivingCanId, PortConstants.kRearRightTurningCanId, DriveConstants.kRearRightChassisAngularOffset));
+  }
+
+  /**
+   * Initializes a new instance of the SwerveDrive class with the specified dependencies.
+   */
+  public SwerveDrive(Gyro gyro, SwerveModule frontLeftModule, SwerveModule frontRightModule, SwerveModule rearLeftModule, SwerveModule rearRightModule) throws IOException, ParseException {
+    this.gyroSubsystem = gyro;
+    this.frontLeftSwerveModule = frontLeftModule;
+    this.frontRightSwerveModule = frontRightModule;
+    this.rearLeftSwerveModule = rearLeftModule;
+    this.rearRightSwerveModule = rearRightModule;
+
     try {
       config = RobotConfig.fromGUISettings();
     } catch (IOException e) {
@@ -136,8 +128,17 @@ public class SwerveDrive extends SubsystemBase {
         },
         this); // Reference to this subsystem to set requirements
     }
+
+    swerveDriveOdometry = new SwerveDriveOdometry(
+      DriveConstants.kDriveKinematics,
+      this.getHeadingObject(),
+      new SwerveModulePosition[] {
+          frontLeftSwerveModule.getPosition(),
+          frontRightSwerveModule.getPosition(),
+          rearLeftSwerveModule.getPosition(),
+          rearRightSwerveModule.getPosition()
+      });
   }
-  
 
   /**
    * Updates the odometry of the swerve drive system.
