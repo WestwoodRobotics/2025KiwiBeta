@@ -15,6 +15,7 @@
       "GitHub.copilot"
     ],
     "tasks": {
-      "build": "./gradlew build"
+      "build": "./gradlew build",
+      "test": "./gradlew test"
     }
 }
