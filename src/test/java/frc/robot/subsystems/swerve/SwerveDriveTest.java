@@ -277,4 +277,60 @@ public class SwerveDriveTest {
         swerveDrive.periodic();
         assertNotNull(swerveDrive.fieldVisualization, "Field visualization should not be null");
     }
+
+    // Add utilities for field orientation tests
+    private static Stream<org.junit.jupiter.params.provider.Arguments> fieldOrientationTestCases() {
+        return Stream.of(
+            org.junit.jupiter.params.provider.Arguments.of(0.0, 0.0, 0.0),
+            org.junit.jupiter.params.provider.Arguments.of(Math.PI / 2, 1.0, 0.0),
+            org.junit.jupiter.params.provider.Arguments.of(Math.PI, 1.0, 0.0),
+            org.junit.jupiter.params.provider.Arguments.of(3 * Math.PI / 2, 1.0, 0.0)
+        );
+    }
+
+    // Add coordinate transformation verification helpers
+    private void verifyTransformationMatrix(double expectedAngle, double actualAngle) {
+        assertEquals(expectedAngle, actualAngle, 0.01, "Transformation matrix mismatch");
+    }
+
+    // Add gyro angle simulation capabilities
+    private void simulateGyroAngle(double angleRadians) {
+        double angleDegrees = Math.toDegrees(angleRadians);
+        when(mockRawGyroObject.getZAngle()).thenReturn(angleDegrees);
+        when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(angleRadians));
+    }
+
+    // Add tests for behavior during continuous rotation and when crossing quadrant boundaries
+    @ParameterizedTest
+    @MethodSource("fieldOrientationTestCases")
+    public void testOrientationTransitions(double angle, double xSpeed, double ySpeed) {
+        simulateGyroAngle(angle);
+        
+        // Compute target angle relative to the robot orientation
+        double targetAngle = (xSpeed == 0.0 && ySpeed == 0.0) ? 
+            0.0 : Math.atan2(ySpeed, xSpeed) - angle;
+        
+        // Normalize targetAngle to [-π, π]
+        targetAngle = Math.atan2(Math.sin(targetAngle), Math.cos(targetAngle));
+        
+        swerveDrive.drive(xSpeed, ySpeed, 0.0, true, false);
+    
+        // Capture the SwerveModuleState objects set to each module
+        ArgumentCaptor<SwerveModuleState> captor = ArgumentCaptor.forClass(SwerveModuleState.class);
+    
+        // Verify and capture desired states for all modules
+        for (SwerveModule module : modules) {
+            verify(module).setDesiredState(captor.capture());
+        }
+        
+        // Verify that the module angles match the expected targetAngle
+        for (SwerveModuleState state : captor.getAllValues()) {
+            double actualAngle = state.angle.getRadians();
+            // Normalize actualAngle to [-π, π]
+            actualAngle = Math.atan2(Math.sin(actualAngle), Math.cos(actualAngle));
+            assertEquals(targetAngle, actualAngle, 1e-6, "Transformation matrix mismatch");
+        }
+    }
+
+    
 }
