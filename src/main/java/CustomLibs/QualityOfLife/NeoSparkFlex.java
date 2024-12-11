@@ -36,6 +36,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
  import com.revrobotics.spark.config.SparkFlexConfigAccessor;
 
 import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
+import CustomLibs.QualityOfLife.NeoSparkClosedLoopController.ArbFFUnits;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.utils.SparkModels;
  
@@ -144,11 +145,51 @@ import frc.robot.subsystems.utils.SparkModels;
   }
 
   public void setIdleMode(IdleMode mode) {
-    if(getIdleMode() != mode) {
+    if(getIdleMode() != mode || getIdleMode() == null) {
       current_config.idleMode(mode);
     }
     configure(current_config);
   }
+
+  public REVLibError setReference(double value, NeoSparkBase.ControlType ctrl) {
+    this.throwIfClosed();
+    return setReference(value, ctrl, 0);
+  }
+
+  /**
+   * Set the controller reference value based on the selected control mode. This will override the
+   * pre-programmed control mode but not change what is programmed to the controller.
+   *
+   * @param value The value to set depending on the control mode. For basic duty cycle control this
+   *     should be a value between -1 and 1 Otherwise: Voltage Control: Voltage (volts) Velocity
+   *     Control: Velocity (RPM) Position Control: Position (Rotations) Current Control: Current
+   *     (Amps). Native units can be changed using the setPositionConversionFactor() or
+   *     setVelocityConversionFactor() methods of the RelativeEncoder class
+   * @param ctrl Is the control type to override with
+   * @param pidSlot for this command
+   * @return {@link REVLibError#kOk} if successful
+   */
+  public REVLibError setReference(double value, NeoSparkBase.ControlType ctrl, int pidSlot) {
+    this.throwIfClosed();
+    return setReference(value, ctrl, pidSlot, 0);
+  }
+
+  public REVLibError setReference(
+      double value, NeoSparkBase.ControlType ctrl, int pidSlot, double arbFeedforward) {
+    this.throwIfClosed();
+    return this.setpointCommand(value, ctrl, pidSlot, arbFeedforward);
+  }
+
+  public REVLibError setReference(
+    double value,
+    NeoSparkBase.ControlType ctrl,
+    int pidSlot,
+    double arbFeedforward,
+    ArbFFUnits arbFFUnits) {
+    this.throwIfClosed();
+    return this.setpointCommand(value, ctrl, pidSlot, arbFeedforward, arbFFUnits.value);
+  }
+
 
   public IdleMode getIdleMode() {
     return current_config.getIdleMode();

@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
 import CustomLibs.QualityOfLife.NeoSparkFlex;
+import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
 
 public class SwerveModuleTest {
 
@@ -26,6 +27,7 @@ public class SwerveModuleTest {
 
     @Test
     public void testNeoSparkMaxPIDValues() {
+        mockNeoSparkMax.setPIDF(1.0, 0.1, 0.01, 0.001);
         when(mockNeoSparkMax.getP()).thenReturn(1.0);
         when(mockNeoSparkMax.getI()).thenReturn(0.1);
         when(mockNeoSparkMax.getD()).thenReturn(0.01);
@@ -39,6 +41,7 @@ public class SwerveModuleTest {
 
     @Test
     public void testNeoSparkMaxOutputRange() {
+        mockNeoSparkMax.setOutputRange(-1.0, 1.0);
         when(mockNeoSparkMax.getOutputRangeMin()).thenReturn(-1.0);
         when(mockNeoSparkMax.getOutputRangeMax()).thenReturn(1.0);
 
@@ -48,15 +51,20 @@ public class SwerveModuleTest {
 
     @Test
     public void testNeoSparkMaxMotorSettings() {
-        when(mockNeoSparkMax.getIdleMode()).thenReturn(NeoSparkMax.IdleMode.kBrake);
-        when(mockNeoSparkMax.getSmartCurrentLimit()).thenReturn(40);
+        mockNeoSparkMax.setIdleMode(IdleMode.kBrake);
+        mockNeoSparkMax.setSmartCurrentLimit(40);
+        when(mockNeoSparkMax.getIdleMode()).thenReturn(IdleMode.kBrake);
+        when(mockNeoSparkMax.getSmartCurrentLimit()).thenReturn(40.0);
 
-        assertEquals(NeoSparkMax.IdleMode.kBrake, mockNeoSparkMax.getIdleMode());
+        assertEquals(IdleMode.kBrake, mockNeoSparkMax.getIdleMode());
         assertEquals(40, mockNeoSparkMax.getSmartCurrentLimit());
     }
 
     @Test
     public void testNeoSparkMaxEncoderSettings() {
+
+        mockNeoSparkMax.setPositionConversionFactor(1.0);
+        mockNeoSparkMax.setVelocityConversionFactor(1.0);
         when(mockNeoSparkMax.getPositionConversionFactor()).thenReturn(1.0);
         when(mockNeoSparkMax.getVelocityConversionFactor()).thenReturn(1.0);
 
@@ -99,10 +107,10 @@ public class SwerveModuleTest {
 
     @Test
     public void testNeoSparkFlexMotorSettings() {
-        when(mockNeoSparkFlex.getIdleMode()).thenReturn(NeoSparkFlex.IdleMode.kBrake);
-        when(mockNeoSparkFlex.getSmartCurrentLimit()).thenReturn(40);
+        when(mockNeoSparkFlex.getIdleMode()).thenReturn(IdleMode.kBrake);
+        when(mockNeoSparkFlex.getSmartCurrentLimit()).thenReturn(40.0);
 
-        assertEquals(NeoSparkFlex.IdleMode.kBrake, mockNeoSparkFlex.getIdleMode());
+        assertEquals(IdleMode.kBrake, mockNeoSparkFlex.getIdleMode());
         assertEquals(40, mockNeoSparkFlex.getSmartCurrentLimit());
     }
 
