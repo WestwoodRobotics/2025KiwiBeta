@@ -370,9 +370,29 @@ import frc.robot.subsystems.utils.SparkModels;
     return current_config.closedLoop.getPositionWrappingInputRangeMax();
   }
 
+  public double getP() {
+    return getClosedLoopController().getP();
+  }
 
+  public double getI() {
+    return getClosedLoopController().getI();
+  }
 
+  public double getD() {
+    return getClosedLoopController().getD();
+  }
 
+  public double getF() {
+    return getClosedLoopController().getF();
+  }
+
+  public double getOutputRangeMin() {
+    return getClosedLoopController().getOutputRangeMin();
+  }
+
+  public double getOutputRangeMax() {
+    return getClosedLoopController().getOutputRangeMax();
+  }
 
  }
  

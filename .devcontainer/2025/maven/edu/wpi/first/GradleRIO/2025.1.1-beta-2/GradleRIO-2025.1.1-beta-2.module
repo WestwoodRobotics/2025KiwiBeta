@@ -1,0 +1,146 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "edu.wpi.first",
+    "module": "GradleRIO",
+    "version": "2025.1.1-beta-2",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.code.gson",
+          "module": "gson",
+          "version": {
+            "requires": "2.8.6"
+          }
+        },
+        {
+          "group": "edu.wpi.first",
+          "module": "native-utils",
+          "version": {
+            "requires": "2025.6.0"
+          }
+        },
+        {
+          "group": "de.undercouch",
+          "module": "gradle-download-task",
+          "version": {
+            "requires": "4.1.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "GradleRIO-2025.1.1-beta-2.jar",
+          "url": "GradleRIO-2025.1.1-beta-2.jar",
+          "size": 166631,
+          "sha512": "3e90ec7a6d390aebaabe48c504ab8ad5f0a8c9ed01a54b16adeeda424196360a4309259b7f54f8a4968b9f9cdb463eadf8490c8ebbfd61c6f5d64a532cbf69eb",
+          "sha256": "5ddc5b120937fd4da993f5d99c221e9b7e088daf277969fa077ae773c4f897b4",
+          "sha1": "8f7b7d53b75e2835525092d882e23bcd1c121b9c",
+          "md5": "2b3a2deb999a39438749ba15ca42ca58"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.google.code.gson",
+          "module": "gson",
+          "version": {
+            "requires": "2.8.6"
+          }
+        },
+        {
+          "group": "edu.wpi.first",
+          "module": "native-utils",
+          "version": {
+            "requires": "2025.6.0"
+          }
+        },
+        {
+          "group": "de.undercouch",
+          "module": "gradle-download-task",
+          "version": {
+            "requires": "4.1.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "GradleRIO-2025.1.1-beta-2.jar",
+          "url": "GradleRIO-2025.1.1-beta-2.jar",
+          "size": 166631,
+          "sha512": "3e90ec7a6d390aebaabe48c504ab8ad5f0a8c9ed01a54b16adeeda424196360a4309259b7f54f8a4968b9f9cdb463eadf8490c8ebbfd61c6f5d64a532cbf69eb",
+          "sha256": "5ddc5b120937fd4da993f5d99c221e9b7e088daf277969fa077ae773c4f897b4",
+          "sha1": "8f7b7d53b75e2835525092d882e23bcd1c121b9c",
+          "md5": "2b3a2deb999a39438749ba15ca42ca58"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "GradleRIO-2025.1.1-beta-2-javadoc.jar",
+          "url": "GradleRIO-2025.1.1-beta-2-javadoc.jar",
+          "size": 339230,
+          "sha512": "6e82b9a4c2044f40c84bb937ee6e18fc4fd728b38ad05cae1f84edbd8214b8e354037b07528f9893335d840e532a7a1b18ba85de462d740d723fa780520c9ca2",
+          "sha256": "ae3218230c01fe29e672feedecb4bc443950800f7061261ca108faa54eda059b",
+          "sha1": "da57e557fb36c6234cefe74ca7a14677f7e1a32e",
+          "md5": "5293c9341a70cfd9c0355b6d7eb888b3"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "GradleRIO-2025.1.1-beta-2-sources.jar",
+          "url": "GradleRIO-2025.1.1-beta-2-sources.jar",
+          "size": 69134,
+          "sha512": "f4ad2b367c8521cb563307161559031d75ee5ca582e2a6c9fda46c4cefa4cd0a2cced1bc104ec6cbdf13cfa45234e4873c17273531c39a00803d98136b154c9f",
+          "sha256": "da197957f919937cbc902004be5ef06244ff4a1e9b9f409f340762f3e0e1da76",
+          "sha1": "0fa3789cf35647244e1491a9f2877af34f2ae76e",
+          "md5": "f72d6d7e47501e2ea3c3d8f89fc8c5e0"
+        }
+      ]
+    }
+  ]
+}

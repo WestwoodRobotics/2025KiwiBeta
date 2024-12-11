@@ -239,5 +239,29 @@ import frc.robot.subsystems.utils.SparkModels;
   public REVLibError configCurrentConfig() {
     return configure(current_config);
   }
+
+  public double getP() {
+    return getClosedLoopController().getP();
+  }
+
+  public double getI() {
+    return getClosedLoopController().getI();
+  }
+
+  public double getD() {
+    return getClosedLoopController().getD();
+  }
+
+  public double getF() {
+    return getClosedLoopController().getF();
+  }
+
+  public double getOutputRangeMin() {
+    return getClosedLoopController().getOutputRangeMin();
+  }
+
+  public double getOutputRangeMax() {
+    return getClosedLoopController().getOutputRangeMax();
+  }
  }
  
