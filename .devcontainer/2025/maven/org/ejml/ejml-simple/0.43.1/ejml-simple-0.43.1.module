@@ -1,0 +1,202 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.ejml",
+    "module": "ejml-simple",
+    "version": "0.43.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.3.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.ejml",
+          "module": "ejml-core",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-fdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-ddense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-cdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-zdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-dsparse",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-fsparse",
+          "version": {
+            "requires": "0.43.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ejml-simple-0.43.1.jar",
+          "url": "ejml-simple-0.43.1.jar",
+          "size": 204000,
+          "sha512": "01f9d99166393194e2af1bf9253aa2595f3a687b5ff34e03d6aba6debae17179b2a4fb272f54cfaa312d0cd8b46794975ed94287bfee12396208034fe42ce2d2",
+          "sha256": "348acd004027e1e0719b76cac6432d368640489eb3d619508275fd37373acb0d",
+          "sha1": "14bdcf04ee68dbe6c4b57a7c465ef0c9194417ba",
+          "md5": "ba2b807292453a646ec27edd6ec61aee"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.ejml",
+          "module": "ejml-core",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-fdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-ddense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-cdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-zdense",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-dsparse",
+          "version": {
+            "requires": "0.43.1"
+          }
+        },
+        {
+          "group": "org.ejml",
+          "module": "ejml-fsparse",
+          "version": {
+            "requires": "0.43.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ejml-simple-0.43.1.jar",
+          "url": "ejml-simple-0.43.1.jar",
+          "size": 204000,
+          "sha512": "01f9d99166393194e2af1bf9253aa2595f3a687b5ff34e03d6aba6debae17179b2a4fb272f54cfaa312d0cd8b46794975ed94287bfee12396208034fe42ce2d2",
+          "sha256": "348acd004027e1e0719b76cac6432d368640489eb3d619508275fd37373acb0d",
+          "sha1": "14bdcf04ee68dbe6c4b57a7c465ef0c9194417ba",
+          "md5": "ba2b807292453a646ec27edd6ec61aee"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "ejml-simple-0.43.1-javadoc.jar",
+          "url": "ejml-simple-0.43.1-javadoc.jar",
+          "size": 339800,
+          "sha512": "8842a1451be1c09e9e0b5fb8e24f71e8b49f475ecedc336cda8d94645e04fb1da016b29eb65da45a941ad62f61d6bff06413507b1a3b8814132d181f75836571",
+          "sha256": "6c24db0fcb92bab06a4e187853f909e74cd17939abc4d1e22e79ffa26373ef78",
+          "sha1": "b09c81ef02eb6ba2459373bc1c29f9616b188208",
+          "md5": "e0ca24deb1f3d672559304d4eb1f3287"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "ejml-simple-0.43.1-sources.jar",
+          "url": "ejml-simple-0.43.1-sources.jar",
+          "size": 91250,
+          "sha512": "e6fb544d878c146031c64a1b06f9850854c2e597ee1ae0db272747bfc29cf15c41858b7386b339245c9cc6941ccaa7cd95a3dd7d92d82353ae9d4e1ad2b742c8",
+          "sha256": "12287f75f3dca82f0bf3341d446f04cc2cb10ea72e2381e729257fd8e4a4d2d1",
+          "sha1": "d900b99e9abc2d4bb3bf29b8b2447f65f251c3f3",
+          "md5": "6ca2ff69da8a4f04dc2fd917b3a1d6a5"
+        }
+      ]
+    }
+  ]
+}

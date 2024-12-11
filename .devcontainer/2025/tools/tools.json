@@ -1,0 +1,126 @@
+[
+  {
+    "name": "SmartDashboard",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx64",
+      "extension": "jar",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "SmartDashboard"
+    },
+    "cpp": false
+  },
+  {
+    "name": "Shuffleboard",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx64",
+      "extension": "jar",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "Shuffleboard"
+    },
+    "cpp": false
+  },
+  {
+    "name": "RobotBuilder",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "",
+      "extension": "jar",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "RobotBuilder"
+    },
+    "cpp": false
+  },
+  {
+    "name": "PathWeaver",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx64",
+      "extension": "jar",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "PathWeaver"
+    },
+    "cpp": false
+  },
+  {
+    "name": "OutlineViewer",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx86-64",
+      "extension": "zip",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "OutlineViewer"
+    },
+    "cpp": true
+  },
+  {
+    "name": "Glass",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx86-64",
+      "extension": "zip",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "Glass"
+    },
+    "cpp": true
+  },
+  {
+    "name": "SysId",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx86-64",
+      "extension": "zip",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "SysId"
+    },
+    "cpp": true
+  },
+  {
+    "name": "roboRIOTeamNumberSetter",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx86-64",
+      "extension": "zip",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "roboRIOTeamNumberSetter"
+    },
+    "cpp": true
+  },
+  {
+    "name": "DataLogTool",
+    "version": "2025.1.1-beta-2",
+    "artifact": {
+      "classifier": "linuxx86-64",
+      "extension": "zip",
+      "groupId": "edu.wpi.first.tools",
+      "version": "2025.1.1-beta-2",
+      "artifactId": "DataLogTool"
+    },
+    "cpp": true
+  },
+  {
+    "name": "AdvantageScope",
+    "version": "v4.0.0-beta-3"
+  },
+  {
+    "name": "Choreo",
+    "version": "v2025.0.0-beta-6"
+  },
+  {
+    "name": "Elastic",
+    "version": "v2025.0.0-beta-4"
+  },
+  {
+    "name": "Utility",
+    "version": "2025.1.1-beta-2"
+  }
+]

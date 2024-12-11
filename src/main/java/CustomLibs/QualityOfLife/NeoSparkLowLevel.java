@@ -296,21 +296,21 @@ public abstract class NeoSparkLowLevel implements MotorController, AutoCloseable
 
   REVLibError setpointCommand(double value) {
     throwIfClosed();
-    return setpointCommand(value, SparkMax.ControlType.kDutyCycle);
+    return setpointCommand(value, NeoSparkMax.ControlType.kDutyCycle);
   }
 
-  REVLibError setpointCommand(double value, SparkMax.ControlType ctrl) {
+  REVLibError setpointCommand(double value, NeoSparkMax.ControlType ctrl) {
     throwIfClosed();
     return setpointCommand(value, ctrl, 0);
   }
 
-  REVLibError setpointCommand(double value, SparkMax.ControlType ctrl, int pidSlot) {
+  REVLibError setpointCommand(double value, NeoSparkMax.ControlType ctrl, int pidSlot) {
     throwIfClosed();
     return setpointCommand(value, ctrl, pidSlot, 0);
   }
 
   REVLibError setpointCommand(
-      double value, SparkMax.ControlType ctrl, int pidSlot, double arbFeedforward) {
+      double value, NeoSparkMax.ControlType ctrl, int pidSlot, double arbFeedforward) {
     throwIfClosed();
     return setpointCommand(value, ctrl, pidSlot, arbFeedforward, 0);
   }
@@ -319,7 +319,7 @@ public abstract class NeoSparkLowLevel implements MotorController, AutoCloseable
   // SparkClosedLoopController.
   //             Next year, we can set them all to be protected.
   REVLibError setpointCommand(
-      double value, SparkMax.ControlType ctrl, int pidSlot, double arbFeedforward, int arbFFUnits) {
+      double value, NeoSparkMax.ControlType ctrl, int pidSlot, double arbFeedforward, int arbFFUnits) {
     throwIfClosed();
     return REVLibError.fromInt(
         CANSparkJNI.c_Spark_SetpointCommand(

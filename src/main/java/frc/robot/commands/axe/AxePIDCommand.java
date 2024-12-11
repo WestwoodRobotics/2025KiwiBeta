@@ -33,7 +33,7 @@ public class AxePIDCommand extends Command {
         axeMotor.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxAcceleration(AxeConstants.kMAXMotionMaxAcceleration); // Set to an appropriate velocity value
         axeMotor.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxVelocity(AxeConstants.kMAXMotionMaxVelocity);
         axeMotor.configCurrentConfig();
-        axeMotor.getClosedLoopController().setReference(targetPosition, ControlType.kMAXMotionPositionControl);
+        axeMotor.getClosedLoopController().setReference(targetPosition, NeoSparkBase.ControlType.kMAXMotionPositionControl);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class AxePIDCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        axeMotor.getClosedLoopController().setReference(0, ControlType.kDutyCycle);
+        axeMotor.getClosedLoopController().setReference(0, NeoSparkBase.ControlType.kDutyCycle);
         axe.setAxePower(0);
     }
 }

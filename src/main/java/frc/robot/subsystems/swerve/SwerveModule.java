@@ -20,7 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
-
+import CustomLibs.QualityOfLife.NeoSparkBase;
 /**
  * Represents a swerve module with driving and turning capabilities.
  * This class encapsulates the functionality for controlling a single swerve module,
@@ -119,11 +119,11 @@ public class SwerveModule {
 
         drivingMotorPIDController.setReference(
                 optimizedDesiredState.speedMetersPerSecond,
-                ControlType.kVelocity
+                NeoSparkBase.ControlType.kVelocity
         );
         turningMotorPIDController.setReference(
                 optimizedDesiredState.angle.getRadians(),
-                ControlType.kPosition
+                NeoSparkBase.ControlType.kPosition
         );
 
         moduleDesiredState = desiredState;
@@ -158,6 +158,10 @@ public class SwerveModule {
 
     public double getTurningEncoderPosition() {
         return turningMotorEncoder.getPosition();
+    }
+
+    public double getTurningMotorControllerP(){
+        return turningMotorController.getP();
     }
 
 

@@ -1,0 +1,118 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.ejml",
+    "module": "ejml-cdense",
+    "version": "0.43.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.3.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.ejml",
+          "module": "ejml-core",
+          "version": {
+            "requires": "0.43.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ejml-cdense-0.43.1.jar",
+          "url": "ejml-cdense-0.43.1.jar",
+          "size": 86531,
+          "sha512": "9a2e5e56a31839d3023ddb63a5ed35a57f17b19a61b03b442fbb90281861c562a9aa5e8378406d3d677110af20af75ca28c8e13f192b35889d1154f16c71cd2b",
+          "sha256": "20c96f2b25facf9014c46c6d0e0139e2c1bbec7954411e9eb1b4c53ef7eaef6d",
+          "sha1": "07be7e81513c630637fa97f621c6b076712e1ffb",
+          "md5": "2c6df71965c5cdf7691c5872c86c6776"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.ejml",
+          "module": "ejml-core",
+          "version": {
+            "requires": "0.43.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "ejml-cdense-0.43.1.jar",
+          "url": "ejml-cdense-0.43.1.jar",
+          "size": 86531,
+          "sha512": "9a2e5e56a31839d3023ddb63a5ed35a57f17b19a61b03b442fbb90281861c562a9aa5e8378406d3d677110af20af75ca28c8e13f192b35889d1154f16c71cd2b",
+          "sha256": "20c96f2b25facf9014c46c6d0e0139e2c1bbec7954411e9eb1b4c53ef7eaef6d",
+          "sha1": "07be7e81513c630637fa97f621c6b076712e1ffb",
+          "md5": "2c6df71965c5cdf7691c5872c86c6776"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "ejml-cdense-0.43.1-javadoc.jar",
+          "url": "ejml-cdense-0.43.1-javadoc.jar",
+          "size": 256003,
+          "sha512": "e0248e6ab84a0efe170b9b58848d16ef190a1f28fc40aceb6261a1b2100a724f87f5b80a873035dc1f3514e65ad201a515b4aa7d06d141abdcb45189ca0c58ce",
+          "sha256": "f4c8b9e98023c0e92b457e2a2f4c35ee7ea8e94437bd024860f3cf8b5b8ccbea",
+          "sha1": "ebed4bc58c13ff274230e3e45982a0c7612ddede",
+          "md5": "dc2408467f70fcac7e2e62c4be3ed2e1"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "ejml-cdense-0.43.1-sources.jar",
+          "url": "ejml-cdense-0.43.1-sources.jar",
+          "size": 77522,
+          "sha512": "ef3c3ffa512f6ac78900add143b9b1be425d74239d5cc1e7fe73a149427679c542d32d2831890a0e02722f0610c0f944bcc0af6de3c36536266c7a871f45583a",
+          "sha256": "46111202474d6800669c60b2e5d5d55afa1326cd23b9b598e1f0b540c0fffd8a",
+          "sha1": "11463e5e03f16609c27ed4993a91ccc0c19c1359",
+          "md5": "f33c95f71962d7990a6deec2c212029b"
+        }
+      ]
+    }
+  ]
+}

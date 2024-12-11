@@ -184,7 +184,7 @@ import frc.robot.subsystems.utils.SparkModels;
      throwIfClosed();
      // Only for 'get' API
      m_setpoint = speed;
-     setpointCommand(speed, SparkBase.ControlType.kDutyCycle);
+     setpointCommand(speed, NeoSparkBase.ControlType.kDutyCycle);
    }
  
    /**
@@ -198,7 +198,7 @@ import frc.robot.subsystems.utils.SparkModels;
    @Override
    public void setVoltage(double outputVolts) {
      throwIfClosed();
-     setpointCommand(outputVolts, SparkBase.ControlType.kVoltage);
+     setpointCommand(outputVolts, NeoSparkBase.ControlType.kVoltage);
    }
  
    /**
