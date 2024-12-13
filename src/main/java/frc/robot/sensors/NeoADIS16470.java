@@ -282,9 +282,11 @@ public class NeoADIS16470 implements AutoCloseable, NTSendable {
       // Relies on the RIO hardware by default configuring an output as low
       // and configuring an input as high Z. The 10k pull-up resistor internal to the
       // IMU then forces the reset line high for normal operation.
-      m_reset_out = new DigitalOutput(27); // Drive SPI CS2 (IMU RST) low
+          // Force the IMU reset pin to toggle on startup (doesn't require DS enable)
+      // Use a local variable instead of class field
+      var reset_out = new DigitalOutput(27); // Drive SPI CS2 (IMU RST) low
       Timer.delay(0.01); // Wait 10ms
-      m_reset_out.close();
+      reset_out.close(); // Close it immediately
       m_reset_in = new DigitalInput(27); // Set SPI CS2 (IMU RST) high
       Timer.delay(0.25); // Wait 250ms for reset to complete
 
