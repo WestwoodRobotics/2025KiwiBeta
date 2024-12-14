@@ -231,7 +231,6 @@ public class SwerveDriveTest {
     public void testGyroFunctionality() {
         when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(Math.PI / 4));
         assertEquals(Math.PI / 4, swerveDrive.getHeadingObject().getRadians(), 0.01);
-
         swerveDrive.resetGyro();
         verify(mockGyro).reset();
     }
