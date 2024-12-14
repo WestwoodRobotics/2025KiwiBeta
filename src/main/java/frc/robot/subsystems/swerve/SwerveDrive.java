@@ -73,7 +73,22 @@ public class SwerveDrive extends SubsystemBase {
    * Initializes a new instance of the SwerveDrive class with the specified dependencies.
    */
   public SwerveDrive(Gyro gyro, MAXSwerveModule frontLeftModule, MAXSwerveModule frontRightModule, MAXSwerveModule rearLeftModule, MAXSwerveModule rearRightModule, RobotConfig config, boolean isTestMode) throws IOException, ParseException {
-    this.gyroSubsystem = gyro;
+
+    gyroSubsystem = gyro; // Always set the gyroSubsystem
+
+    if (!isTestMode){
+        try {
+            // Any additional initialization or checks for non-test mode
+            if (gyroSubsystem == null /* or check if gyro is not responding */) {
+                System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
+                gyroSubsystem = null;
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
+            gyroSubsystem = null;
+        }
+    }
+
     this.frontLeftSwerveModule = frontLeftModule;
     this.frontRightSwerveModule = frontRightModule;
     this.rearLeftSwerveModule = rearLeftModule;
@@ -96,14 +111,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     isSlowMode = false;
-    if (!isTestMode){
-      try {
-        gyroSubsystem = new Gyro();
-      } catch (NullPointerException e) {
-        System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
-        gyroSubsystem = null;
-      }   
-    }
+    
        
 
     fieldVisualization = new Field2d();
@@ -165,6 +173,12 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Y Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawGyroObject().getYAngle() : 0.0);
     fieldVisualization.setRobotPose(getPose());
     SmartDashboard.putNumber("FL Module Velocity", frontRightSwerveModule.getState().speedMetersPerSecond);
+    
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    System.out.println("Z Gyro Angle: " + gyroSubsystem.getRawGyroObject().getZAngle());
   }
 
   /**
