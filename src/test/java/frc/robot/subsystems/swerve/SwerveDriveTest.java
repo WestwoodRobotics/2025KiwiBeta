@@ -27,6 +27,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.sensors.NeoADIS16470;
+import frc.robot.commands.swerve.driveCommand;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class SwerveDriveTest {
 
@@ -37,24 +39,27 @@ public class SwerveDriveTest {
     private NeoADIS16470 mockRawGyroObject;
 
     @Mock
-    private SwerveModule mockFrontLeftModule;
+    private MAXSwerveModule mockFrontLeftModule;
 
     @Mock
-    private SwerveModule mockFrontRightModule;
+    private MAXSwerveModule mockFrontRightModule;
 
     @Mock
-    private SwerveModule mockRearLeftModule;
+    private MAXSwerveModule mockRearLeftModule;
 
     @Mock
-    private SwerveModule mockRearRightModule;
+    private MAXSwerveModule mockRearRightModule;
+
+    @Mock
+    private XboxController mockController;
 
     private SwerveDrive swerveDrive;
     private SwerveDriveKinematics kDriveKinematics;
 
-    private SwerveModule[] modules;
+    private MAXSwerveModule[] modules;
 
     private void initModules() {
-        modules = new SwerveModule[] {
+        modules = new MAXSwerveModule[] {
             mockFrontLeftModule,
             mockFrontRightModule,
             mockRearLeftModule,
@@ -74,7 +79,7 @@ public class SwerveDriveTest {
         when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(0));
 
         // Mock SwerveModule positions and states
-        for (SwerveModule module : modules) {
+        for (MAXSwerveModule module : modules) {
             when(module.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
             when(module.getState()).thenReturn(new SwerveModuleState(1.0, new Rotation2d(0)));
         }
@@ -133,7 +138,7 @@ public class SwerveDriveTest {
         ArgumentCaptor<SwerveModuleState> captor = ArgumentCaptor.forClass(SwerveModuleState.class);
 
         // Verify and capture desired states for all modules
-        for (SwerveModule module : modules) {
+        for (MAXSwerveModule module : modules) {
             verify(module).setDesiredState(captor.capture());
         }
 
@@ -199,7 +204,7 @@ public class SwerveDriveTest {
     @Test
     public void testOdometryUpdate() {
         when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(0));
-        for (SwerveModule module : modules) {
+        for (MAXSwerveModule module : modules) {
             when(module.getPosition()).thenReturn(new SwerveModulePosition(0, new Rotation2d(0)));
         }
 
@@ -226,7 +231,6 @@ public class SwerveDriveTest {
     public void testGyroFunctionality() {
         when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(Math.PI / 4));
         assertEquals(Math.PI / 4, swerveDrive.getHeadingObject().getRadians(), 0.01);
-
         swerveDrive.resetGyro();
         verify(mockGyro).reset();
     }
@@ -278,59 +282,105 @@ public class SwerveDriveTest {
         assertNotNull(swerveDrive.fieldVisualization, "Field visualization should not be null");
     }
 
-    // Add utilities for field orientation tests
-    private static Stream<org.junit.jupiter.params.provider.Arguments> fieldOrientationTestCases() {
-        return Stream.of(
-            org.junit.jupiter.params.provider.Arguments.of(0.0, 0.0, 0.0),
-            org.junit.jupiter.params.provider.Arguments.of(Math.PI / 2, 1.0, 0.0),
-            org.junit.jupiter.params.provider.Arguments.of(Math.PI, 1.0, 0.0),
-            org.junit.jupiter.params.provider.Arguments.of(3 * Math.PI / 2, 1.0, 0.0)
-        );
+    @Test
+    public void testFieldRelativeDrive() {
+        double[] angles = {0.0, 90.0, 180.0, 270.0};
+        for (double gyroAngle : angles) {
+            when(mockGyro.getRawGyroObject().getZAngle()).thenReturn(gyroAngle);
+
+            // Command "forward" in field-relative terms
+            swerveDrive.drive(1.0, 0.0, 0.0, true, false);
+
+            // Capture states
+            ArgumentCaptor<SwerveModuleState> captor = ArgumentCaptor.forClass(SwerveModuleState.class);
+            for (MAXSwerveModule module : modules) {
+                verify(module).setDesiredState(captor.capture());
+            }
+
+            // Expect each module to be angled roughly (gyroAngle + 90) in degrees
+            for (int i = 0; i < modules.length; i++) {
+                double expectedAngle = -(gyroAngle * Math.PI/180.0) % (2*Math.PI);
+                if (expectedAngle > Math.PI) expectedAngle -= 2*Math.PI;
+                if (expectedAngle < -Math.PI) expectedAngle += 2*Math.PI;
+                assertEquals(expectedAngle, captor.getAllValues().get(i).angle.getRadians(), 0.01,
+                    "Field-relative mismatch at gyro angle: " + gyroAngle + ", module: " + i);
+            }
+            reset(modules);
+        }
     }
 
-    // Add coordinate transformation verification helpers
-    private void verifyTransformationMatrix(double expectedAngle, double actualAngle) {
-        assertEquals(expectedAngle, actualAngle, 0.01, "Transformation matrix mismatch");
+    @Test
+    public void testDriveCommand() {
+        driveCommand driveCmd = new driveCommand(swerveDrive, mockController);
+
+        // Simulate forward input
+        when(mockController.getLeftX()).thenReturn(0.0);
+        when(mockController.getLeftY()).thenReturn(-1.0);
+        when(mockController.getRightX()).thenReturn(0.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {0.0, 0.0, 0.0, 0.0}, "Forward");
+
+        // Simulate backward input
+        when(mockController.getLeftY()).thenReturn(1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {Math.PI, Math.PI, Math.PI, Math.PI}, "Backward");
+
+        // Simulate left input
+        when(mockController.getLeftY()).thenReturn(0.0);
+        when(mockController.getLeftX()).thenReturn(-1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {Math.PI / 2, Math.PI / 2, Math.PI / 2, Math.PI / 2}, "Left");
+
+        // Simulate right input
+        when(mockController.getLeftX()).thenReturn(1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {-Math.PI / 2, -Math.PI / 2, -Math.PI / 2, -Math.PI / 2}, "Right");
+
+        // Simulate forward-right diagonal input
+        when(mockController.getLeftX()).thenReturn(1.0);
+        when(mockController.getLeftY()).thenReturn(-1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {-Math.PI / 4, -Math.PI / 4, -Math.PI / 4, -Math.PI / 4}, "Forward-Right");
+
+        // Simulate forward-left diagonal input
+        when(mockController.getLeftX()).thenReturn(-1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4}, "Forward-Left");
+
+        // Simulate backward-right diagonal input
+        when(mockController.getLeftX()).thenReturn(1.0);
+        when(mockController.getLeftY()).thenReturn(1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {-3 * Math.PI / 4, -3 * Math.PI / 4, -3 * Math.PI / 4, -3 * Math.PI / 4}, "Backward-Right");
+
+        // Simulate backward-left diagonal input
+        when(mockController.getLeftX()).thenReturn(-1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {3 * Math.PI / 4, 3 * Math.PI / 4, 3 * Math.PI / 4, 3 * Math.PI / 4}, "Backward-Left");
+
+        // Simulate rotation right input
+        when(mockController.getLeftX()).thenReturn(0.0);
+        when(mockController.getLeftY()).thenReturn(0.0);
+        when(mockController.getRightX()).thenReturn(1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {-1 * Math.PI / 4, -3 * Math.PI / 4, Math.PI / 4, 3 * Math.PI / 4}, "Rotation-Right");
+
+        // Simulate rotation left input
+        when(mockController.getRightX()).thenReturn(-1.0);
+        driveCmd.execute();
+        verifyWheelAngles(new double[] {3 * Math.PI / 4, Math.PI / 4, -3 * Math.PI / 4, -Math.PI / 4}, "Rotation-Left");
+        
+
     }
 
-    // Add gyro angle simulation capabilities
-    private void simulateGyroAngle(double angleRadians) {
-        double angleDegrees = Math.toDegrees(angleRadians);
-        when(mockRawGyroObject.getZAngle()).thenReturn(angleDegrees);
-        when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(angleRadians));
-    }
-
-    // Add tests for behavior during continuous rotation and when crossing quadrant boundaries
-    @ParameterizedTest
-    @MethodSource("fieldOrientationTestCases")
-    public void testOrientationTransitions(double angle, double xSpeed, double ySpeed) {
-        simulateGyroAngle(angle);
-        
-        // Compute target angle relative to the robot orientation
-        double targetAngle = (xSpeed == 0.0 && ySpeed == 0.0) ? 
-            0.0 : Math.atan2(ySpeed, xSpeed) - angle;
-        
-        // Normalize targetAngle to [-π, π]
-        targetAngle = Math.atan2(Math.sin(targetAngle), Math.cos(targetAngle));
-        
-        swerveDrive.drive(xSpeed, ySpeed, 0.0, true, false);
-    
-        // Capture the SwerveModuleState objects set to each module
+    private void verifyWheelAngles(double[] expectedAngles, String direction) {
         ArgumentCaptor<SwerveModuleState> captor = ArgumentCaptor.forClass(SwerveModuleState.class);
-    
-        // Verify and capture desired states for all modules
-        for (SwerveModule module : modules) {
-            verify(module).setDesiredState(captor.capture());
+        for (MAXSwerveModule module : modules) {
+            verify(module, atLeastOnce()).setDesiredState(captor.capture());
         }
-        
-        // Verify that the module angles match the expected targetAngle
-        for (SwerveModuleState state : captor.getAllValues()) {
-            double actualAngle = state.angle.getRadians();
-            // Normalize actualAngle to [-π, π]
-            actualAngle = Math.atan2(Math.sin(actualAngle), Math.cos(actualAngle));
-            assertEquals(targetAngle, actualAngle, 1e-6, "Transformation matrix mismatch");
+        for (int i = 0; i < modules.length; i++) {
+            assertEquals(expectedAngles[i], captor.getAllValues().get(i).angle.getRadians(), 0.01, direction + " - Module " + i + " angle mismatch");
         }
+        reset(modules);
     }
-
-    
 }

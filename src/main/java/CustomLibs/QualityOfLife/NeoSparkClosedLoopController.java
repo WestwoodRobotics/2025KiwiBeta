@@ -80,7 +80,7 @@ import CustomLibs.QualityOfLife.NeoSparkBase.ControlType;
     * @param ctrl the control type
     * @return {@link REVLibError#kOk} if successful
     */
-   public REVLibError setReference(double value, SparkBase.ControlType ctrl) {
+   public REVLibError setReference(double value, NeoSparkBase.ControlType ctrl) {
      spark.throwIfClosed();
      return setReference(value, ctrl, 0);
    }
@@ -98,7 +98,7 @@ import CustomLibs.QualityOfLife.NeoSparkBase.ControlType;
     * @param pidSlot for this command
     * @return {@link REVLibError#kOk} if successful
     */
-   public REVLibError setReference(double value, SparkBase.ControlType ctrl, int pidSlot) {
+   public REVLibError setReference(double value, NeoSparkBase.ControlType ctrl, int pidSlot) {
      spark.throwIfClosed();
      return setReference(value, ctrl, pidSlot, 0);
    }
@@ -120,7 +120,7 @@ import CustomLibs.QualityOfLife.NeoSparkBase.ControlType;
     * @return {@link REVLibError#kOk} if successful
     */
    public REVLibError setReference(
-       double value, SparkBase.ControlType ctrl, int pidSlot, double arbFeedforward) {
+       double value, NeoSparkBase.ControlType ctrl, int pidSlot, double arbFeedforward) {
      spark.throwIfClosed();
      return spark.setpointCommand(value, ctrl, pidSlot, arbFeedforward);
    }
@@ -144,7 +144,7 @@ import CustomLibs.QualityOfLife.NeoSparkBase.ControlType;
     */
    public REVLibError setReference(
        double value,
-       SparkBase.ControlType ctrl,
+       NeoSparkBase.ControlType ctrl,
        int pidSlot,
        double arbFeedforward,
        ArbFFUnits arbFFUnits) {

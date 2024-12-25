@@ -46,10 +46,10 @@ public class SwerveDrive extends SubsystemBase {
   private boolean isSlowMode;
 
   // Swerve modules
-  private final SwerveModule frontLeftSwerveModule;
-  private final SwerveModule frontRightSwerveModule;
-  private final SwerveModule rearLeftSwerveModule;
-  private final SwerveModule rearRightSwerveModule;
+  private final MAXSwerveModule frontLeftSwerveModule;
+  private final MAXSwerveModule frontRightSwerveModule;
+  private final MAXSwerveModule rearLeftSwerveModule;
+  private final MAXSwerveModule rearRightSwerveModule;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry swerveDriveOdometry;
@@ -63,17 +63,30 @@ public class SwerveDrive extends SubsystemBase {
    */
   public SwerveDrive() throws IOException, ParseException {
     this(new Gyro(),
-         new SwerveModule(PortConstants.kFrontLeftDrivingCanId, PortConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
-         new SwerveModule(PortConstants.kFrontRightDrivingCanId, PortConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
-         new SwerveModule(PortConstants.kRearLeftDrivingCanId, PortConstants.kRearLeftTurningCanId, DriveConstants.kRearLeftChassisAngularOffset),
-         new SwerveModule(PortConstants.kRearRightDrivingCanId, PortConstants.kRearRightTurningCanId, DriveConstants.kRearRightChassisAngularOffset), RobotConfig.fromGUISettings(), false);
+         new MAXSwerveModule(PortConstants.kFrontLeftDrivingCanId, PortConstants.kFrontLeftTurningCanId, DriveConstants.kFrontLeftChassisAngularOffset),
+         new MAXSwerveModule(PortConstants.kFrontRightDrivingCanId, PortConstants.kFrontRightTurningCanId, DriveConstants.kFrontRightChassisAngularOffset),
+         new MAXSwerveModule(PortConstants.kRearLeftDrivingCanId, PortConstants.kRearLeftTurningCanId, DriveConstants.kRearLeftChassisAngularOffset),
+         new MAXSwerveModule(PortConstants.kRearRightDrivingCanId, PortConstants.kRearRightTurningCanId, DriveConstants.kRearRightChassisAngularOffset), RobotConfig.fromGUISettings(), false);
   }
 
   /**
    * Initializes a new instance of the SwerveDrive class with the specified dependencies.
    */
-  public SwerveDrive(Gyro gyro, SwerveModule frontLeftModule, SwerveModule frontRightModule, SwerveModule rearLeftModule, SwerveModule rearRightModule, RobotConfig config, boolean isTestMode) throws IOException, ParseException {
-    this.gyroSubsystem = gyro;
+  public SwerveDrive(Gyro gyro, MAXSwerveModule frontLeftModule, MAXSwerveModule frontRightModule, MAXSwerveModule rearLeftModule, MAXSwerveModule rearRightModule, RobotConfig config, boolean isTestMode) throws IOException, ParseException {
+
+    gyroSubsystem = gyro; // Always set the gyroSubsystem
+
+    if (!isTestMode){
+        try {
+            // Any additional initialization or checks for non-test mode
+            if (gyroSubsystem == null /* or check if gyro is not responding */) {
+                System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
+        }
+    }
+
     this.frontLeftSwerveModule = frontLeftModule;
     this.frontRightSwerveModule = frontRightModule;
     this.rearLeftSwerveModule = rearLeftModule;
@@ -96,14 +109,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     isSlowMode = false;
-    if (!isTestMode){
-      try {
-        gyroSubsystem = new Gyro();
-      } catch (NullPointerException e) {
-        System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
-        gyroSubsystem = null;
-      }   
-    }
+    
        
 
     fieldVisualization = new Field2d();
@@ -166,6 +172,11 @@ public class SwerveDrive extends SubsystemBase {
     fieldVisualization.setRobotPose(getPose());
     SmartDashboard.putNumber("FL Module Velocity", frontRightSwerveModule.getState().speedMetersPerSecond);
     
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    System.out.println("Z Gyro Angle: " + gyroSubsystem.getRawGyroObject().getZAngle());
   }
 
   /**
@@ -243,6 +254,25 @@ public class SwerveDrive extends SubsystemBase {
     rearLeftSwerveModule.setDesiredState(swerveModuleStates[2]);
     rearRightSwerveModule.setDesiredState(swerveModuleStates[3]);
     SmartDashboard.putNumber("module velocity ref", swerveModuleStates[1].speedMetersPerSecond);
+  }
+
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    // Convert the commanded speeds into the correct units for the drivetrain
+    double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+    double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+                gyroSubsystem != null ? Rotation2d.fromDegrees((gyroSubsystem.getRawGyroObject().getZAngle())) : Rotation2d.fromDegrees(0.0))
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    frontLeftSwerveModule.setDesiredState(swerveModuleStates[0]);
+    frontRightSwerveModule.setDesiredState(swerveModuleStates[1]);
+    rearLeftSwerveModule.setDesiredState(swerveModuleStates[2]);
+    rearRightSwerveModule.setDesiredState(swerveModuleStates[3]);
   }
 
   /**
