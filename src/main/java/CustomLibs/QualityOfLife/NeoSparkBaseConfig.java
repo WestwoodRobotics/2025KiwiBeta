@@ -503,7 +503,7 @@ import com.revrobotics.spark.config.SoftLimitConfig;
     if (getParameter(SparkParameter.kSmartCurrentStallLimit.value) == null){
       return -999; //Some insane value
     }
-    return (Float) getParameter(SparkParameter.kSmartCurrentStallLimit.value);
+    return ((Integer) getParameter(SparkParameter.kSmartCurrentStallLimit.value)).doubleValue();
    }
 
    public NeoClosedLoopConfig getClosedLoopConfig() {

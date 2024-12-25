@@ -2,7 +2,7 @@
     "name": "WPILib",
     "remoteUser": "vscode",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
-    "postCreateCommand": "/workspaces/KiwiCode/.devcontainer/post_create.sh",
+    "postCreateCommand": "/workspaces/2025KiwiBeta/.devcontainer/post_create.sh",
     "overrideCommand": true,
     "privileged": true,
     "features": {

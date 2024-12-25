@@ -43,7 +43,7 @@ if [ ! -d "$HOME/wpilib/$YEAR" ]; then
     sudo rm -rf ~/wpilib/2025/maven/
     # Run ToolsUpdater.py
     cd ~/wpilib/"$YEAR"/tools/ && sudo python3 ToolsUpdater.py
-
+    
     # Install VS Code extensions
     cd ~/wpilib/"$YEAR"/vsCodeExtensions && sudo find . -name "*.vsix" | sudo xargs -I {} code --install-extension {}
 else

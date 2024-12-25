@@ -86,13 +86,13 @@ import frc.robot.subsystems.utils.SparkModels;
      sparkHandle = CANSparkJNI.c_Spark_Create(deviceId, type.value, SparkModel.SparkMax.id);
 
     
-     if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkMax.id) {
-       DriverStation.reportWarning(
-           "CANSparkMax object created for CAN ID "
-               + deviceId
-               + ", which is not a SPARK MAX. Some functionalities may not work.",
-           true);
-     }
+    //  if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkMax.id) {
+    //    DriverStation.reportWarning(
+    //        "CANSparkMax object created for CAN ID "
+    //            + deviceId
+    //            + ", which is not a SPARK MAX. Some functionalities may not work.",
+    //        true);
+    //  }
    }
  
    /** ***** Extended Functions ****** */
