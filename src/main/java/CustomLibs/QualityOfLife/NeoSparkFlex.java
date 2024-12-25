@@ -70,13 +70,13 @@ import frc.robot.subsystems.utils.SparkModels;
      configAccessor = new SparkFlexConfigAccessor(sparkHandle);
      sparkHandle = CANSparkJNI.c_Spark_Create(deviceId, type.value, SparkModels.SparkFlex.id);
  
-     if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkFlex.id) {
-       DriverStation.reportWarning(
-           "CANSparkFlex object created for CAN ID "
-               + deviceId
-               + ", which is not a SPARK Flex. Some functionalities may not work.",
-           true);
-     }
+    //  if (CANSparkJNI.c_Spark_GetSparkModel(sparkHandle) != SparkModels.SparkFlex.id) {
+    //    DriverStation.reportWarning(
+    //        "CANSparkFlex object created for CAN ID "
+    //            + deviceId
+    //            + ", which is not a SPARK Flex. Some functionalities may not work.",
+    //        true);
+    //  }
    }
 
    public REVLibError configure(

@@ -172,15 +172,18 @@ public class NeoEncoderConfig extends NeoBaseConfig {
     if (getParameter(SparkParameter.kPositionConversionFactor.value) == null){
       return -999; // Some insane value
     }
-    return (double) getParameter(SparkParameter.kPositionConversionFactor.value);
+    return ((Float) getParameter(SparkParameter.kPositionConversionFactor.value)).doubleValue();
    }
 
-    public double getVelocityConversionFactor(){
-      if (getParameter(SparkParameter.kVelocityConversionFactor.value) == null){
-        return -999; // Some insane value
-      }
-        return (double) getParameter(SparkParameter.kVelocityConversionFactor.value);
+   // ...existing code...
+   public double getVelocityConversionFactor(){
+    if (getParameter(SparkParameter.kVelocityConversionFactor.value) == null){
+       return -999; // Some default "invalid" value
     }
+    // Convert from Float to double without direct cast to Double
+    return ((Float) getParameter(SparkParameter.kVelocityConversionFactor.value)).doubleValue();
+  }
+
 
 
  }

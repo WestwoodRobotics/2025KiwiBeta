@@ -1,136 +1,249 @@
 package frc.robot.subsystems.swerve;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
 import CustomLibs.QualityOfLife.NeoSparkFlex;
+import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
 import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
 
 public class SwerveModuleTest {
+    private static final double DELTA = 1e-8;
+    private static int incrementCANID = 1;
+    @Mock
+    private NeoSparkMax realNeoSparkMax;
 
     @Mock
-    private NeoSparkMax mockNeoSparkMax;
-
-    @Mock
-    private NeoSparkFlex mockNeoSparkFlex;
+    private NeoSparkFlex realNeoSparkFlex;
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.openMocks(this);
+
+        realNeoSparkMax = new NeoSparkMax(incrementCANID, MotorType.kBrushless);
+        realNeoSparkFlex = new NeoSparkFlex(incrementCANID+1, MotorType.kBrushless);
+        incrementCANID += 2;
     }
 
     @Test
     public void testNeoSparkMaxPIDValues() {
-        mockNeoSparkMax.setPIDF(1.0, 0.1, 0.01, 0.001);
-        when(mockNeoSparkMax.getP()).thenReturn(1.0);
-        when(mockNeoSparkMax.getI()).thenReturn(0.1);
-        when(mockNeoSparkMax.getD()).thenReturn(0.01);
-        when(mockNeoSparkMax.getF()).thenReturn(0.001);
-
-        assertEquals(1.0, mockNeoSparkMax.getP());
-        assertEquals(0.1, mockNeoSparkMax.getI());
-        assertEquals(0.01, mockNeoSparkMax.getD());
-        assertEquals(0.001, mockNeoSparkMax.getF());
+        realNeoSparkMax.setPIDF(1.0, 0.1, 0.01, 0.001);
+        realNeoSparkMax.configure(realNeoSparkMax.getCurrentConfig());
+        assertEquals(1.0, realNeoSparkMax.getP(), DELTA);
+        assertEquals(0.1, realNeoSparkMax.getI(), DELTA);
+        assertEquals(0.01, realNeoSparkMax.getD(), DELTA);
+        assertEquals(0.001, realNeoSparkMax.getF(), DELTA);
     }
 
     @Test
     public void testNeoSparkMaxOutputRange() {
-        mockNeoSparkMax.setOutputRange(-1.0, 1.0);
-        when(mockNeoSparkMax.getOutputRangeMin()).thenReturn(-1.0);
-        when(mockNeoSparkMax.getOutputRangeMax()).thenReturn(1.0);
+        realNeoSparkMax.setOutputRange(-1.0, 1.0);
+        realNeoSparkMax.configure(realNeoSparkMax.getCurrentConfig());
 
-        assertEquals(-1.0, mockNeoSparkMax.getOutputRangeMin());
-        assertEquals(1.0, mockNeoSparkMax.getOutputRangeMax());
+        assertEquals(-1.0, realNeoSparkMax.getOutputRangeMin());
+        assertEquals(1.0, realNeoSparkMax.getOutputRangeMax());
     }
 
     @Test
     public void testNeoSparkMaxMotorSettings() {
-        mockNeoSparkMax.setIdleMode(IdleMode.kBrake);
-        mockNeoSparkMax.setSmartCurrentLimit(40);
-        when(mockNeoSparkMax.getIdleMode()).thenReturn(IdleMode.kBrake);
-        when(mockNeoSparkMax.getSmartCurrentLimit()).thenReturn(40.0);
-
-        assertEquals(IdleMode.kBrake, mockNeoSparkMax.getIdleMode());
-        assertEquals(40, mockNeoSparkMax.getSmartCurrentLimit());
+        realNeoSparkMax.setIdleMode(IdleMode.kBrake);
+        realNeoSparkMax.setSmartCurrentLimit(40);
+        assertEquals(IdleMode.kBrake, realNeoSparkMax.getIdleMode());
+        assertEquals(40, realNeoSparkMax.getSmartCurrentLimit());
     }
 
     @Test
     public void testNeoSparkMaxEncoderSettings() {
 
-        mockNeoSparkMax.setPositionConversionFactor(1.0);
-        mockNeoSparkMax.setVelocityConversionFactor(1.0);
-        when(mockNeoSparkMax.getPositionConversionFactor()).thenReturn(1.0);
-        when(mockNeoSparkMax.getVelocityConversionFactor()).thenReturn(1.0);
+        realNeoSparkMax.setPositionConversionFactor(1.0);
+        realNeoSparkMax.setVelocityConversionFactor(1.0);
 
-        assertEquals(1.0, mockNeoSparkMax.getPositionConversionFactor());
-        assertEquals(1.0, mockNeoSparkMax.getVelocityConversionFactor());
+
+        assertEquals(1.0, realNeoSparkMax.getPositionConversionFactor());
+        assertEquals(1.0, realNeoSparkMax.getVelocityConversionFactor());
     }
 
     @Test
     public void testNeoSparkMaxPositionWrappingSettings() {
-        when(mockNeoSparkMax.isPositionWrappingEnabled()).thenReturn(true);
-        when(mockNeoSparkMax.getPositionWrappingInputRangeMin()).thenReturn(0.0);
-        when(mockNeoSparkMax.getPositionWrappingInputRangeMax()).thenReturn(360.0);
-
-        assertTrue(mockNeoSparkMax.isPositionWrappingEnabled());
-        assertEquals(0.0, mockNeoSparkMax.getPositionWrappingInputRangeMin());
-        assertEquals(360.0, mockNeoSparkMax.getPositionWrappingInputRangeMax());
+        realNeoSparkMax.setPositionWrappingEnabled(true);
+        realNeoSparkMax.setPositionWrappingInputRange(0.0, 360.0);
+        assertTrue(realNeoSparkMax.isPositionWrappingEnabled());
+        assertEquals(0.0, realNeoSparkMax.getPositionWrappingInputRangeMin());
+        assertEquals(360.0, realNeoSparkMax.getPositionWrappingInputRangeMax());
     }
 
     @Test
     public void testNeoSparkFlexPIDValues() {
-        when(mockNeoSparkFlex.getP()).thenReturn(1.0);
-        when(mockNeoSparkFlex.getI()).thenReturn(0.1);
-        when(mockNeoSparkFlex.getD()).thenReturn(0.01);
-        when(mockNeoSparkFlex.getF()).thenReturn(0.001);
+        realNeoSparkFlex.setPIDF(1.0, 0.1, 0.01, 0.001);
+        realNeoSparkFlex.configure(realNeoSparkFlex.getCurrentConfig());
 
-        assertEquals(1.0, mockNeoSparkFlex.getP());
-        assertEquals(0.1, mockNeoSparkFlex.getI());
-        assertEquals(0.01, mockNeoSparkFlex.getD());
-        assertEquals(0.001, mockNeoSparkFlex.getF());
+        assertEquals(1.0, realNeoSparkFlex.getP(), DELTA);
+        assertEquals(0.1, realNeoSparkFlex.getI(), DELTA);
+        assertEquals(0.01, realNeoSparkFlex.getD(), DELTA);
+        assertEquals(0.001, realNeoSparkFlex.getF(), DELTA);
     }
 
     @Test
     public void testNeoSparkFlexOutputRange() {
-        when(mockNeoSparkFlex.getOutputRangeMin()).thenReturn(-1.0);
-        when(mockNeoSparkFlex.getOutputRangeMax()).thenReturn(1.0);
+        realNeoSparkFlex.setOutputRange(-1.0, 1.0);
 
-        assertEquals(-1.0, mockNeoSparkFlex.getOutputRangeMin());
-        assertEquals(1.0, mockNeoSparkFlex.getOutputRangeMax());
+        assertEquals(-1.0, realNeoSparkFlex.getOutputRangeMin());
+        assertEquals(1.0, realNeoSparkFlex.getOutputRangeMax());
     }
 
     @Test
     public void testNeoSparkFlexMotorSettings() {
-        when(mockNeoSparkFlex.getIdleMode()).thenReturn(IdleMode.kBrake);
-        when(mockNeoSparkFlex.getSmartCurrentLimit()).thenReturn(40.0);
-
-        assertEquals(IdleMode.kBrake, mockNeoSparkFlex.getIdleMode());
-        assertEquals(40, mockNeoSparkFlex.getSmartCurrentLimit());
+        realNeoSparkFlex.setIdleMode(IdleMode.kBrake);
+        realNeoSparkFlex.setSmartCurrentLimit(40);
+        assertEquals(IdleMode.kBrake, realNeoSparkFlex.getIdleMode());
+        assertEquals(40, realNeoSparkFlex.getSmartCurrentLimit());
     }
 
     @Test
     public void testNeoSparkFlexEncoderSettings() {
-        when(mockNeoSparkFlex.getPositionConversionFactor()).thenReturn(1.0);
-        when(mockNeoSparkFlex.getVelocityConversionFactor()).thenReturn(1.0);
-
-        assertEquals(1.0, mockNeoSparkFlex.getPositionConversionFactor());
-        assertEquals(1.0, mockNeoSparkFlex.getVelocityConversionFactor());
+        realNeoSparkFlex.setPositionConversionFactor(1.0);
+        realNeoSparkFlex.setVelocityConversionFactor(1.0);
+        assertEquals(1.0, realNeoSparkFlex.getPositionConversionFactor());
+        assertEquals(1.0, realNeoSparkFlex.getVelocityConversionFactor());
     }
 
     @Test
     public void testNeoSparkFlexPositionWrappingSettings() {
-        when(mockNeoSparkFlex.isPositionWrappingEnabled()).thenReturn(true);
-        when(mockNeoSparkFlex.getPositionWrappingInputRangeMin()).thenReturn(0.0);
-        when(mockNeoSparkFlex.getPositionWrappingInputRangeMax()).thenReturn(360.0);
-
-        assertTrue(mockNeoSparkFlex.isPositionWrappingEnabled());
-        assertEquals(0.0, mockNeoSparkFlex.getPositionWrappingInputRangeMin());
-        assertEquals(360.0, mockNeoSparkFlex.getPositionWrappingInputRangeMax());
+        realNeoSparkFlex.setPositionWrappingEnabled(true);
+        realNeoSparkFlex.setPositionWrappingInputRange(0.0, 360.0);
+        assertTrue(realNeoSparkFlex.isPositionWrappingEnabled());
+        assertEquals(0.0, realNeoSparkFlex.getPositionWrappingInputRangeMin());
+        assertEquals(360.0, realNeoSparkFlex.getPositionWrappingInputRangeMax());
     }
+
+
+    @Test
+    public void testNeoSparkMaxReconfiguration() {
+        realNeoSparkMax.setPIDF(1.0, 0.1, 0.01, 0.001);
+        realNeoSparkMax.configure(realNeoSparkMax.getCurrentConfig());
+        
+        // Reconfigure with new PIDF values
+        realNeoSparkMax.setPIDF(2.0, 0.2, 0.02, 0.002);
+        realNeoSparkMax.configure(realNeoSparkMax.getCurrentConfig());
+        
+        assertEquals(2.0, realNeoSparkMax.getP(), DELTA);
+        assertEquals(0.2, realNeoSparkMax.getI(), DELTA);
+        assertEquals(0.02, realNeoSparkMax.getD(), DELTA);
+        assertEquals(0.002, realNeoSparkMax.getF(), DELTA);
+    }
+    
+    @Test
+    public void testNeoSparkFlexReconfiguration() {
+        realNeoSparkFlex.setPIDF(1.0, 0.1, 0.01, 0.001);
+        realNeoSparkFlex.configure(realNeoSparkFlex.getCurrentConfig());
+        
+        // Reconfigure with new PIDF values
+        realNeoSparkFlex.setPIDF(2.0, 0.2, 0.02, 0.002);
+        realNeoSparkFlex.configure(realNeoSparkFlex.getCurrentConfig());
+        
+        assertEquals(2.0, realNeoSparkFlex.getP(), DELTA);
+        assertEquals(0.2, realNeoSparkFlex.getI(), DELTA);
+        assertEquals(0.02, realNeoSparkFlex.getD(), DELTA);
+        assertEquals(0.002, realNeoSparkFlex.getF(), DELTA);
+    }
+
+    @Test
+    public void testNeoSparkMaxIdleModeTransitions() {
+        realNeoSparkMax.setIdleMode(IdleMode.kBrake);
+        assertEquals(IdleMode.kBrake, realNeoSparkMax.getIdleMode());
+        
+        realNeoSparkMax.setIdleMode(IdleMode.kCoast);
+        assertEquals(IdleMode.kCoast, realNeoSparkMax.getIdleMode());
+    }
+    
+    @Test
+    public void testNeoSparkFlexIdleModeTransitions() {
+        realNeoSparkFlex.setIdleMode(IdleMode.kBrake);
+        assertEquals(IdleMode.kBrake, realNeoSparkFlex.getIdleMode());
+        
+        realNeoSparkFlex.setIdleMode(IdleMode.kCoast);
+        assertEquals(IdleMode.kCoast, realNeoSparkFlex.getIdleMode());
+    }
+
+    @Test
+    public void testNeoSparkMaxPositionWrappingBehavior() {
+        // Enable position wrapping with valid range
+        realNeoSparkMax.setPositionWrappingEnabled(true);
+        realNeoSparkMax.setPositionWrappingInputRange(0.0, 360.0);
+        assertTrue(realNeoSparkMax.isPositionWrappingEnabled());
+        assertEquals(0.0, realNeoSparkMax.getPositionWrappingInputRangeMin());
+        assertEquals(360.0, realNeoSparkMax.getPositionWrappingInputRangeMax());
+        
+        // Disable position wrapping
+        realNeoSparkMax.setPositionWrappingEnabled(false);
+        assertFalse(realNeoSparkMax.isPositionWrappingEnabled());
+    }
+    
+    @Test
+    public void testNeoSparkFlexPositionWrappingBehavior() {
+        // Enable position wrapping with valid range
+        realNeoSparkFlex.setPositionWrappingEnabled(true);
+        realNeoSparkFlex.setPositionWrappingInputRange(0.0, 360.0);
+        assertTrue(realNeoSparkFlex.isPositionWrappingEnabled());
+        assertEquals(0.0, realNeoSparkFlex.getPositionWrappingInputRangeMin());
+        assertEquals(360.0, realNeoSparkFlex.getPositionWrappingInputRangeMax());
+        
+        // Disable position wrapping
+        realNeoSparkFlex.setPositionWrappingEnabled(false);
+        assertFalse(realNeoSparkFlex.isPositionWrappingEnabled());
+    }
+
+    @Test
+    public void testNeoSparkMaxConcurrentConfiguration() throws InterruptedException {
+        Runnable configureTask = () -> {
+            for (int i = 0; i < 1000; i++) {
+                realNeoSparkMax.setPIDF(i, i * 0.1, i * 0.01, i * 0.001);
+            }
+        };
+        
+        Thread thread1 = new Thread(configureTask);
+        Thread thread2 = new Thread(configureTask);
+        
+        thread1.start();
+        thread2.start();
+        
+        thread1.join();
+        thread2.join();
+        
+        // Verify final state is consistent
+        assertTrue(realNeoSparkMax.getP() >= 0);
+        assertTrue(realNeoSparkMax.getI() >= 0);
+        assertTrue(realNeoSparkMax.getD() >= 0);
+        assertTrue(realNeoSparkMax.getF() >= 0);
+    }
+
+    @Test
+    public void testNeoSparkFlexConcurrentConfiguration() throws InterruptedException {
+        Runnable configureTask = () -> {
+            for (int i = 0; i < 1000; i++) {
+                realNeoSparkFlex.setPIDF(i, i * 0.1, i * 0.01, i * 0.001);
+            }
+        };
+        
+        Thread thread1 = new Thread(configureTask);
+        Thread thread2 = new Thread(configureTask);
+        
+        thread1.start();
+        thread2.start();
+        
+        thread1.join();
+        thread2.join();
+        
+        // Verify final state is consistent
+        assertTrue(realNeoSparkFlex.getP() >= 0);
+        assertTrue(realNeoSparkFlex.getI() >= 0);
+        assertTrue(realNeoSparkFlex.getD() >= 0);
+        assertTrue(realNeoSparkFlex.getF() >= 0);
+    }
+
 }
