@@ -11,7 +11,7 @@ sudo apt-get update
 sudo apt-get install -y libatomic1
 
 # URL of the WPILib installer
-URL="https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz"
+URL="https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-3/Linux/WPILib_Linux-2025.1.1-beta-3.tar.gz"
 
 # Extract filename from URL
 FILENAME=$(basename "$URL")
