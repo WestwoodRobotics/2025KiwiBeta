@@ -240,6 +240,8 @@ private void configureButtonBindings() {
     //   while (0 == 0){
     //     System.out.println("Yaw Offset: " + m_robotDrive.gyroSubsystem.getProcessedRot2dYaw().getDegrees());
     //   }
+      this.m_robotDrive.gyroSubsystem.setGyroYawOffset(m_robotDrive.gyroSubsystem.getGyroHeadingFromPathPlannerAuto(autoChooser.getSelected().getName()));
+
       return autoChooser.getSelected();
     }
 }

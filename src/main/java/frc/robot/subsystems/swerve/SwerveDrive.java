@@ -157,7 +157,7 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     swerveDriveOdometry.update(
-        gyroSubsystem != null ? Rotation2d.fromDegrees(gyroSubsystem.getRawGyroObject().getZAngle()) : Rotation2d.fromDegrees(0),
+        gyroSubsystem != null ? Rotation2d.fromDegrees(this.getProcessedHeading()) : Rotation2d.fromDegrees(0),
         new SwerveModulePosition[] {
             frontLeftSwerveModule.getPosition(),
             frontRightSwerveModule.getPosition(),
@@ -176,7 +176,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    System.out.println("Z Gyro Angle: " + gyroSubsystem.getRawGyroObject().getZAngle());
+    //System.out.println("Z Gyro Angle: " + gyroSubsystem.getRawGyroObject().getZAngle());
   }
 
   /**
@@ -233,7 +233,7 @@ public class SwerveDrive extends SubsystemBase {
     ChassisSpeeds chassisSpeeds;
     if (fieldRelative) {
         Rotation2d robotAngle = gyroSubsystem != null 
-            ? Rotation2d.fromDegrees(gyroSubsystem.getRawGyroObject().getZAngle()) 
+            ? Rotation2d.fromDegrees(this.getProcessedHeading()) 
             : Rotation2d.fromDegrees(0);
         double cosAngle = robotAngle.getCos();
         double sinAngle = robotAngle.getSin();
@@ -265,7 +265,7 @@ public class SwerveDrive extends SubsystemBase {
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                gyroSubsystem != null ? Rotation2d.fromDegrees((gyroSubsystem.getRawGyroObject().getZAngle())) : Rotation2d.fromDegrees(0.0))
+                gyroSubsystem != null ? Rotation2d.fromDegrees((this.getProcessedHeading())) : Rotation2d.fromDegrees(0.0))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -331,6 +331,10 @@ public class SwerveDrive extends SubsystemBase {
    */
   public double getHeading() {
     return gyroSubsystem != null ? Rotation2d.fromDegrees(gyroSubsystem.getRawGyroObject().getZAngle()).getDegrees() : 0.0;
+  }
+
+  public double getProcessedHeading(){
+    return gyroSubsystem != null ? gyroSubsystem.getProcessedRot2dYaw().getDegrees() : 0.0;
   }
 
   /**
