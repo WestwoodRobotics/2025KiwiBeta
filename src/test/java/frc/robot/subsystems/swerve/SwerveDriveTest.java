@@ -283,6 +283,33 @@ public class SwerveDriveTest {
     }
 
     @Test
+    public void testFieldRelativeDrive() {
+        double[] angles = {0.0, 90.0, 180.0, 270.0};
+        for (double gyroAngle : angles) {
+            when(mockGyro.getRawGyroObject().getZAngle()).thenReturn(gyroAngle);
+
+            // Command "forward" in field-relative terms
+            swerveDrive.drive(1.0, 0.0, 0.0, true, false);
+
+            // Capture states
+            ArgumentCaptor<SwerveModuleState> captor = ArgumentCaptor.forClass(SwerveModuleState.class);
+            for (MAXSwerveModule module : modules) {
+                verify(module).setDesiredState(captor.capture());
+            }
+
+            // Expect each module to be angled roughly (gyroAngle + 90) in degrees
+            for (int i = 0; i < modules.length; i++) {
+                double expectedAngle = -(gyroAngle * Math.PI/180.0) % (2*Math.PI);
+                if (expectedAngle > Math.PI) expectedAngle -= 2*Math.PI;
+                if (expectedAngle < -Math.PI) expectedAngle += 2*Math.PI;
+                assertEquals(expectedAngle, captor.getAllValues().get(i).angle.getRadians(), 0.01,
+                    "Field-relative mismatch at gyro angle: " + gyroAngle + ", module: " + i);
+            }
+            reset(modules);
+        }
+    }
+
+    @Test
     public void testDriveCommand() {
         driveCommand driveCmd = new driveCommand(swerveDrive, mockController);
 

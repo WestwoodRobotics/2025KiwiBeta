@@ -81,11 +81,9 @@ public class SwerveDrive extends SubsystemBase {
             // Any additional initialization or checks for non-test mode
             if (gyroSubsystem == null /* or check if gyro is not responding */) {
                 System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
-                gyroSubsystem = null;
             }
         } catch (Exception e) {
             System.out.println("Warning: Gyro not responding. Skipping gyro initialization.");
-            gyroSubsystem = null;
         }
     }
 
