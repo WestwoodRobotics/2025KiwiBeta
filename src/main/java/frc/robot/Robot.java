@@ -82,7 +82,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    System.out.println(m_robotContainer.m_robotDrive.getProcessedHeading());
+  }
 
   @Override
   public void teleopInit() {
@@ -97,7 +99,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.m_robotDrive.resetGyro();
+    //m_robotContainer.m_robotDrive.resetGyro();
 
   }
 
