@@ -334,7 +334,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public double getProcessedHeading(){
-    return gyroSubsystem != null ? gyroSubsystem.getProcessedRot2dYaw().getDegrees() : 0.0;
+    return (gyroSubsystem != null ? gyroSubsystem.getProcessedRot2dYaw().getDegrees() : 0.0);
   }
 
   /**

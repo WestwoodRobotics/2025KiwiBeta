@@ -49,7 +49,7 @@ public class driveCommand extends Command {
     isRotInput = true;
     rotationPIDController = new PIDController(Constants.DriveConstants.kP, Constants.DriveConstants.kI, Constants.DriveConstants.kD);
     rotationPIDController.setTolerance(5);
-    targetHeading = m_swerveDrive.getHeading();
+    targetHeading = m_swerveDrive.getProcessedHeading();
     rotationPIDController.setSetpoint(targetHeading);
   }
 
@@ -89,7 +89,7 @@ public class driveCommand extends Command {
       if (!isRotInput) {
         timer.start();
         if (timer.hasElapsed(0.3)) {
-          targetHeading = m_swerveDrive.getHeading();
+          targetHeading = m_swerveDrive.getProcessedHeading();
           rotationPIDController.setSetpoint(targetHeading);
           isRotInput = true;
           timer.reset();
@@ -97,7 +97,7 @@ public class driveCommand extends Command {
         }
       }
       if (isRotInput) {
-        rightX = rotationPIDController.calculate(m_swerveDrive.getHeading());
+        rightX = rotationPIDController.calculate(m_swerveDrive.getProcessedHeading());
       }
     }
 

@@ -286,7 +286,9 @@ public class SwerveDriveTest {
     public void testFieldRelativeDrive() {
         double[] angles = {0.0, 90.0, 180.0, 270.0};
         for (double gyroAngle : angles) {
-            when(mockGyro.getRawGyroObject().getZAngle()).thenReturn(gyroAngle);
+            // Mock both raw gyro angle and processed rotation
+            when(mockRawGyroObject.getZAngle()).thenReturn(gyroAngle);
+            when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(Math.toRadians(gyroAngle)));
 
             // Command "forward" in field-relative terms
             swerveDrive.drive(1.0, 0.0, 0.0, true, false);
@@ -297,7 +299,7 @@ public class SwerveDriveTest {
                 verify(module).setDesiredState(captor.capture());
             }
 
-            // Expect each module to be angled roughly (gyroAngle + 90) in degrees
+            // Expect each module to be angled correctly based on the gyro angle
             for (int i = 0; i < modules.length; i++) {
                 double expectedAngle = -(gyroAngle * Math.PI/180.0) % (2*Math.PI);
                 if (expectedAngle > Math.PI) expectedAngle -= 2*Math.PI;
