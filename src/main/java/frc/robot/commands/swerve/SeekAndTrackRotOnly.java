@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.utils.LimelightHelpers;
 
-enum TrackingState {
+enum TrackingState5 {
     SEARCHING,
     LOCKED_ON,
     TARGET_LOST
@@ -19,13 +19,13 @@ public class SeekAndTrackRotOnly extends Command {
     private final String limelightName;
     private final PIDController rotationPID;
     private final double SEARCH_ROTATION_SPEED = 0.2; // Adjust this for search speed
-    private TrackingState state;
+    private TrackingState5 state;
     private final double lostTimeOut = 1;
     private Timer timer;
     public SeekAndTrackRotOnly(SwerveDrive swerve, String limelightName) {
         this.swerve = swerve;
         this.limelightName = limelightName;
-        this.state = TrackingState.SEARCHING;
+        this.state = TrackingState5.SEARCHING;
         this.timer = new Timer();
         
         // Tune PID values for your robot
@@ -40,7 +40,7 @@ public class SeekAndTrackRotOnly extends Command {
         rotationPID.reset();
         timer.reset();
         
-        this.state = TrackingState.SEARCHING;
+        this.state = TrackingState5.SEARCHING;
     }
 
     @Override
@@ -49,23 +49,23 @@ public class SeekAndTrackRotOnly extends Command {
             case SEARCHING:
                 swerve.drive(0, 0, SEARCH_ROTATION_SPEED, true, false);
                 if (LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.LOCKED_ON;
+                    this.state = TrackingState5.LOCKED_ON;
 
                 }
             break;
             case TARGET_LOST:
                 if (timer.hasElapsed(lostTimeOut)){
-                    this.state = TrackingState.SEARCHING;
+                    this.state = TrackingState5.SEARCHING;
                 } 
                 
                 else if (LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.LOCKED_ON;
+                    this.state = TrackingState5.LOCKED_ON;
                 }
                 swerve.drive(0,0,0,true, false);
             break;
             case LOCKED_ON:
                 if (!LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.TARGET_LOST;
+                    this.state = TrackingState5.TARGET_LOST;
                     this.timer.reset();
                     this.timer.start();
                 }
