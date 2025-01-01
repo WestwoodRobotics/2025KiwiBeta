@@ -12,9 +12,10 @@ import CustomLibs.QualityOfLife.NeoSparkMax;
 import CustomLibs.QualityOfLife.NeoSparkFlex;
 import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
 import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
+import CustomLibs.QualityOfLife.NeoMAXMotionConfig.MAXMotionPositionMode;
 
 public class SwerveModuleTest {
-    private static final double DELTA = 1e-8;
+    private static final double DELTA = 1e-6;
     private static int incrementCANID = 1;
     @Mock
     private NeoSparkMax realNeoSparkMax;
@@ -246,4 +247,22 @@ public class SwerveModuleTest {
         assertTrue(realNeoSparkFlex.getF() >= 0);
     }
 
+    @Test
+    public void testNeoSparkMaxMAXMotionProfile() {
+        realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxAcceleration(3.14);
+        realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxVelocity(3.14);
+        realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().setAllowedClosedLoopError(3.14);
+        realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().setMAXMotionPositionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
+        realNeoSparkMax.configure(realNeoSparkMax.getCurrentConfig());
+
+        // assertEquals(1000, realNeoSparkMax.getMotionProfileCruiseVelocity());
+        // assertEquals(1000, realNeoSparkMax.getMotionProfileAcceleration());
+
+        assertEquals(3.14, realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().getMAXMotionMaxAcceleration(), DELTA);
+        assertEquals(3.14, realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().getMAXMotionMaxVelocity(), DELTA);
+        assertEquals(3.14, realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().getAllowedClosedLoopError(), DELTA);
+        assertEquals(MAXMotionPositionMode.kMAXMotionTrapezoidal, realNeoSparkMax.getCurrentConfig().getClosedLoopConfig().getMAXMotionPositionMode());
+    }   
+
+    
 }

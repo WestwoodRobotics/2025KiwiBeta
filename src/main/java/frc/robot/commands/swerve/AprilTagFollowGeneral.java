@@ -19,20 +19,20 @@ enum TrackingState1 {
     TARGET_LOST
 }
 
-public class AprilTagFollow extends Command {
+public class AprilTagFollowGeneral extends Command {
     private final SwerveDrive swerve;
     private final String limelightName;
     private final PIDController xPID;
     private final PIDController zPID;
     private final PIDController rotPID;
     private final double SEARCH_ROTATION_SPEED = 0.2; // Adjust this for search speed
-    private TrackingState state;
+    private TrackingState1 state;
     private final double lostTimeOut = 1;
     private Timer timer;
-    public AprilTagFollow(SwerveDrive swerve, String limelightName) {
+    public AprilTagFollowGeneral(SwerveDrive swerve, String limelightName) {
         this.swerve = swerve;
         this.limelightName = limelightName;
-        this.state = TrackingState.SEARCHING;
+        this.state = TrackingState1.SEARCHING;
         this.timer = new Timer();
         
         // Tune PID values for your robot
@@ -54,7 +54,7 @@ public class AprilTagFollow extends Command {
         rotPID.reset();
         timer.reset();
         
-        this.state = TrackingState.SEARCHING;
+        this.state = TrackingState1.SEARCHING;
     }
 
     @Override
@@ -63,25 +63,25 @@ public class AprilTagFollow extends Command {
             case SEARCHING:
                 swerve.drive(0, 0, -0.1, true, false);
                 if (LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.LOCKED_ON;
+                    this.state = TrackingState1.LOCKED_ON;
 
                 }
                 
             break;
             case TARGET_LOST:
                 if (timer.hasElapsed(lostTimeOut)){
-                    this.state = TrackingState.SEARCHING;
+                    this.state = TrackingState1.SEARCHING;
                 } 
                 
                 else if (LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.LOCKED_ON;
+                    this.state = TrackingState1.LOCKED_ON;
                 }
                 swerve.drive(0,0,0,true, false);
 
             break;
             case LOCKED_ON:
                 if (!LimelightHelpers.getTV(limelightName)) {
-                    this.state = TrackingState.TARGET_LOST;
+                    this.state = TrackingState1.TARGET_LOST;
                     this.timer.reset();
                     this.timer.start();
                 }
@@ -94,19 +94,17 @@ public class AprilTagFollow extends Command {
 
                 
                 // Calculate rotation to track target
-                double x_output = xPID.calculate(t_x, 0.25);
+                double x_output = xPID.calculate(t_x, 0.25);//Because limelight is offcenter of the robot
                 x_output = x_output > 0.2 ? 0.2 : x_output;
                 x_output = x_output < -0.2 ? -0.2 : x_output;
                 
-                double z_output = zPID.calculate(t_z, 1.2);
+                double z_output = zPID.calculate(t_z, 1.2); //Desired distance (one dimensionally) from april tag
                 z_output = z_output > 0.2 ? 0.2 : z_output;
                 z_output = z_output < -0.2 ? -0.2 : z_output;
 
                 double rot_output = rotPID.calculate(t_rot, 0.0);
                 rot_output = rot_output > 0.4 ? 0.4 : rot_output;
                 rot_output = rot_output < -0.4 ? -0.4 : rot_output;
-
-
 
                 // Apply rotation only - no translation
                 swerve.drive(-z_output, x_output, 

@@ -142,7 +142,7 @@ public class RobotContainer {
     //Auto Commands
     NamedCommands.registerCommand("LLSeekAndRotateOnly", new SeekAndTrackRotOnly(m_robotDrive, "limelight"));
     NamedCommands.registerCommand("LLAlignAndRange", new AlignAndRangeAprilTag(m_robotDrive, "limelight"));
-    NamedCommands.registerCommand("LLAlignHorizontally", new AprilTagFollow(m_robotDrive, "limelight"));
+    NamedCommands.registerCommand("LLAlignHorizontally", new AprilTagFollowGeneral(m_robotDrive, "limelight"));
      
 
     DriverStation.silenceJoystickConnectionWarning(true);

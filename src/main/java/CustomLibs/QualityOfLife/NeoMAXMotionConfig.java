@@ -32,7 +32,8 @@ import com.revrobotics.spark.config.ClosedLoopConfig.ClosedLoopSlot;
 
 public class NeoMAXMotionConfig extends NeoBaseConfig {
  public enum MAXMotionPositionMode {
-   kMAXMotionTrapezoidal(0);
+   kMAXMotionTrapezoidal(0),
+   kMAXMotionNull(-1);
 
    // TODO(rylan): Add when S-curve is supported
    // kMAXMotionSCurve(1);
@@ -87,6 +88,9 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
  }
 
  public double getMaxVelocity() {
+    if (getParameter(SparkParameter.kMAXMotionMaxVelocity_0.value) == null) {
+      return -999;
+    }
    return ((Float) getParameter(SparkParameter.kMAXMotionMaxVelocity_0.value)).doubleValue();
  }
 
@@ -107,6 +111,9 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
  }
 
  public double getMaxVelocity(ClosedLoopSlot slot) {
+   if (getParameter(SparkParameter.kMAXMotionMaxVelocity_0.value + slot.value * 5) == null) {
+     return -999;
+   }
    return ((Float) getParameter(SparkParameter.kMAXMotionMaxVelocity_0.value + slot.value * 5))
        .doubleValue();
  }
@@ -129,6 +136,9 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
  }
 
  public double getMaxAcceleration() {
+   if (getParameter(SparkParameter.kMAXMotionMaxAccel_0.value) == null) {
+     return -999;
+   }
    return ((Float) getParameter(SparkParameter.kMAXMotionMaxAccel_0.value)).doubleValue();
  }
 
@@ -149,6 +159,9 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
  }
 
   public double getMaxAcceleration(ClosedLoopSlot slot) {
+    if (getParameter(SparkParameter.kMAXMotionMaxAccel_0.value + slot.value * 5) == null) {
+      return -999;
+    }
     return ((Float) getParameter(SparkParameter.kMAXMotionMaxAccel_0.value + slot.value * 5))
         .doubleValue();
   }
@@ -166,10 +179,14 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
   * @return The modified {@link NeoMAXMotionConfig} object for method chaining
   */
  public NeoMAXMotionConfig allowedClosedLoopError(double allowedError) {
+  
    return allowedClosedLoopError(allowedError, ClosedLoopSlot.kSlot0);
  }
 
   public double getAllowedClosedLoopError() {
+    if (getParameter(SparkParameter.kMAXMotionAllowedClosedLoopError_0.value) == null) {
+      return -999;
+    }
     return ((Float) getParameter(SparkParameter.kMAXMotionAllowedClosedLoopError_0.value))
         .doubleValue();
   }
@@ -195,6 +212,9 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
 
 
   public double getAllowedClosedLoopError(ClosedLoopSlot slot) {
+    if (getParameter(SparkParameter.kMAXMotionAllowedClosedLoopError_0.value + slot.value * 5) == null) {
+      return -999;
+    }
     return ((Float) getParameter(SparkParameter.kMAXMotionAllowedClosedLoopError_0.value + slot.value * 5))
         .doubleValue();
   }
@@ -209,10 +229,14 @@ public class NeoMAXMotionConfig extends NeoBaseConfig {
   * @return The modified {@link NeoMAXMotionConfig} object for method chaining
   */
  public NeoMAXMotionConfig positionMode(MAXMotionPositionMode mode) {
+
    return positionMode(mode, ClosedLoopSlot.kSlot0);
  }
 
   public MAXMotionPositionMode getPositionMode() {
+    if (getParameter(SparkParameter.kMAXMotionPositionMode_0.value) == null) {
+      return MAXMotionPositionMode.kMAXMotionNull;
+    }
     return MAXMotionPositionMode.fromInt(
         ((Integer) getParameter(SparkParameter.kMAXMotionPositionMode_0.value)).intValue());
   }
