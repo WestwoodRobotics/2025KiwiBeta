@@ -25,6 +25,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.PortConstants;
+
 import frc.robot.subsystems.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -54,10 +55,13 @@ public class SwerveDrive extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry swerveDriveOdometry;
 
-  Field2d fieldVisualization;
+  public Field2d fieldVisualization;
   private boolean isYuMode;
   private RobotConfig config;
   private static boolean autoBuilderConfigured = false;
+
+
+
   /**
    * Initializes a new instance of the SwerveDrive class.
    */
@@ -166,9 +170,9 @@ public class SwerveDrive extends SubsystemBase {
         }
     );
 
-    SmartDashboard.putNumber("Z Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawGyroObject().getZAngle() : 0.0);
-    SmartDashboard.putNumber("X Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawGyroObject().getXAngle() : 0.0);
-    SmartDashboard.putNumber("Y Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawGyroObject().getYAngle() : 0.0);
+    SmartDashboard.putNumber("Z Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawRot2dYaw().getDegrees() : 0.0);
+    SmartDashboard.putNumber("X Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawRot2dRoll().getDegrees() : 0.0);
+    SmartDashboard.putNumber("Y Gyro Angle", gyroSubsystem != null ? gyroSubsystem.getRawRot2dPitch().getDegrees() : 0.0);
     fieldVisualization.setRobotPose(getPose());
     SmartDashboard.putNumber("FL Module Velocity", frontRightSwerveModule.getState().speedMetersPerSecond);
     
@@ -330,7 +334,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return The heading of the robot in degrees.
    */
   public double getHeading() {
-    return gyroSubsystem != null ? Rotation2d.fromDegrees(gyroSubsystem.getRawGyroObject().getZAngle()).getDegrees() : 0.0;
+    return gyroSubsystem != null ? gyroSubsystem.getRawRot2dYaw().getDegrees() : 0.0;
   }
 
   public double getProcessedHeading(){

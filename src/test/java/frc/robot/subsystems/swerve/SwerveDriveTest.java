@@ -26,9 +26,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.sensors.NeoADIS16470;
+
 import frc.robot.commands.swerve.driveCommand;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
+
 
 public class SwerveDriveTest {
 
@@ -36,7 +39,7 @@ public class SwerveDriveTest {
     private Gyro mockGyro;
 
     @Mock
-    private NeoADIS16470 mockRawGyroObject;
+    private ADIS16470_IMU mockRawGyroObject;
 
     @Mock
     private MAXSwerveModule mockFrontLeftModule;
@@ -54,6 +57,7 @@ public class SwerveDriveTest {
     private XboxController mockController;
 
     private SwerveDrive swerveDrive;
+
     private SwerveDriveKinematics kDriveKinematics;
 
     private MAXSwerveModule[] modules;
@@ -74,8 +78,11 @@ public class SwerveDriveTest {
         
         // Mock gyro methods
         when(mockGyro.getRawGyroObject()).thenReturn(mockRawGyroObject);
-        when(mockRawGyroObject.getZAngle()).thenReturn(0.0);
-        when(mockRawGyroObject.getYAngle()).thenReturn(0.0);
+        when(mockGyro.getRawRot2dYaw()).thenReturn(new Rotation2d(0)); // Add this line
+        when(mockGyro.getRawRot2dRoll()).thenReturn(new Rotation2d(0)); // Add this line
+        when(mockGyro.getRawRot2dPitch()).thenReturn(new Rotation2d(0)); // Add this line
+        when(mockRawGyroObject.getAngle(IMUAxis.kZ)).thenReturn(0.0);
+        when(mockRawGyroObject.getAngle(IMUAxis.kY)).thenReturn(0.0);
         when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(0));
 
         // Mock SwerveModule positions and states
@@ -287,7 +294,7 @@ public class SwerveDriveTest {
         double[] angles = {0.0, 90.0, 180.0, 270.0};
         for (double gyroAngle : angles) {
             // Mock both raw gyro angle and processed rotation
-            when(mockRawGyroObject.getZAngle()).thenReturn(gyroAngle);
+            when(mockRawGyroObject.getAngle(IMUAxis.kZ)).thenReturn(gyroAngle);
             when(mockGyro.getProcessedRot2dYaw()).thenReturn(new Rotation2d(Math.toRadians(gyroAngle)));
 
             // Command "forward" in field-relative terms

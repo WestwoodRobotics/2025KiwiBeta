@@ -3,8 +3,11 @@ package frc.robot.subsystems.swerve;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.sensors.NeoADIS16470;
+//import frc.robot.sensors.NeoADIS16470;
+
 
 /**
  * The Gyro class is a subsystem that encapsulates the functionality of the ADIS16470 IMU sensor.
@@ -13,7 +16,7 @@ import frc.robot.sensors.NeoADIS16470;
  */
 public class Gyro extends SubsystemBase {
 
-  public NeoADIS16470 gyroSensor; // Renamed from 'gyroscope' to 'gyroSensor' for clarity
+  public ADIS16470_IMU gyroSensor; // Renamed from 'gyroscope' to 'gyroSensor' for clarity
 
   public Rotation2d gyroYawOffset = new Rotation2d(0); // Renamed from 'yawOffset' to 'gyroYawOffset' for clarity
   public Rotation2d gyroPitchOffset = new Rotation2d(0); // Renamed from 'pitchOffset' to 'gyroPitchOffset' for clarity
@@ -23,7 +26,7 @@ public class Gyro extends SubsystemBase {
    * Constructs a Gyro object, initializing the ADIS16470 IMU sensor and zeroing its angles.
    */
   public Gyro() {
-    gyroSensor = new NeoADIS16470();
+    gyroSensor = new ADIS16470_IMU();
     zeroGyro();
   }
 
@@ -87,7 +90,10 @@ public class Gyro extends SubsystemBase {
    * @return The raw yaw angle as a Rotation2d object.
    */
   public Rotation2d getRawRot2dYaw() {
-    return Rotation2d.fromDegrees(gyroSensor.getZAngle());
+    if (gyroSensor == null) {
+        return new Rotation2d(0.0); // Prevent null
+    }
+    return Rotation2d.fromDegrees(gyroSensor.getAngle(IMUAxis.kZ));
   }
 
   /**
@@ -95,7 +101,10 @@ public class Gyro extends SubsystemBase {
    * @return The raw pitch angle as a Rotation2d object.
    */
   public Rotation2d getRawRot2dPitch() {
-    return Rotation2d.fromDegrees(gyroSensor.getYAngle());
+    if (gyroSensor == null) {
+        return new Rotation2d(0.0); // Prevent null
+    }
+    return Rotation2d.fromDegrees(gyroSensor.getAngle(IMUAxis.kY));
   }
 
   /**
@@ -103,7 +112,10 @@ public class Gyro extends SubsystemBase {
    * @return The raw roll angle as a Rotation2d object.
    */
   public Rotation2d getRawRot2dRoll() {
-    return Rotation2d.fromDegrees(gyroSensor.getXAngle());
+    if (gyroSensor == null) {
+        return new Rotation2d(0.0); // Prevent null
+    }
+    return Rotation2d.fromDegrees(gyroSensor.getAngle(IMUAxis.kX));
   }
 
   /**
@@ -120,7 +132,7 @@ public class Gyro extends SubsystemBase {
    * @return The Z-axis angular rate in degrees per second.
    */
   public double getZRate(){
-    return gyroSensor.getZAngularRate();
+    return gyroSensor.getRate(IMUAxis.kZ);
   }
 
   /**
@@ -128,7 +140,7 @@ public class Gyro extends SubsystemBase {
    * @return The X-axis angular rate in degrees per second.
    */
   public double getXRate(){
-    return gyroSensor.getXAngularRate();
+    return gyroSensor.getRate(IMUAxis.kX);
   }
 
   /**
@@ -136,14 +148,14 @@ public class Gyro extends SubsystemBase {
    * @return The Y-axis angular rate in degrees per second.
    */
   public double getYRate(){
-    return gyroSensor.getYAngularRate();
+    return gyroSensor.getRate(IMUAxis.kY);
   }
 
   /**
    * Provides direct access to the raw gyroscope object.
    * @return The raw NeoADIS16470 gyroscope object.
    */
-  public NeoADIS16470 getRawGyroObject() {
+  public ADIS16470_IMU getRawGyroObject() {
     return gyroSensor;
   }
   /**
