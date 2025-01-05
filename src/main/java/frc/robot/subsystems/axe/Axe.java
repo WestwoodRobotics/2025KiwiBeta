@@ -5,8 +5,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
-import CustomLibs.QualityOfLife.NeoSparkMaxConfig;
-import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
+
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -14,10 +13,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AxeConstants;
-import CustomLibs.QualityOfLife.NeoSparkBase;
-import CustomLibs.QualityOfLife.NeoSparkBase.PersistMode;
-import CustomLibs.QualityOfLife.NeoSparkBase.ResetMode;
-import CustomLibs.QualityOfLife.NeoSparkBaseConfig;
+
 
 public class Axe extends SubsystemBase {
 
@@ -29,7 +25,7 @@ public class Axe extends SubsystemBase {
         this.axeMotor = new NeoSparkMax(AxeConstants.kAxeMotorPort, NeoSparkMax.MotorType.kBrushless);
         //this.axePIDController = new PIDController(AxeConstants.kP, AxeConstants.kI, AxeConstants.kD);
         this.axeMotor.setPID(AxeConstants.kP, AxeConstants.kI, AxeConstants.kD);
-        this.axeMotor.configCurrentConfig();
+        this.axeMotor.configure();
         
         // Create and apply motor configuration
         //NeoSparkBaseConfig config = axeMotor.getCurrentConfig();

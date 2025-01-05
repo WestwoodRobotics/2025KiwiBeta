@@ -1,11 +1,10 @@
 package frc.robot.subsystems.Shooter;
 
 
-import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
-
-import CustomLibs.QualityOfLife.NeoSparkBaseConfig.IdleMode;
 
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import CustomLibs.QualityOfLife.NeoSparkFlex;
 import frc.robot.Constants.ShooterConstants;
@@ -48,8 +47,8 @@ public class Shooter extends SubsystemBase {
         bottomRoller.setIdleMode(IdleMode.kBrake);
 
         // Apply the configuration to the rollers
-        topRoller.configure(topRoller.getCurrentConfig());
-        bottomRoller.configure(bottomRoller.getCurrentConfig());
+        topRoller.configure(topRoller.getCurrentWorkingConfig());
+        bottomRoller.configure(bottomRoller.getCurrentWorkingConfig());
 
         this.TopRollerPIDController = new PIDController(
             ShooterConstants.kTopRollerP,

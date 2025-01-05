@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
-import CustomLibs.QualityOfLife.NeoSparkClosedLoopController;
+
 import CustomLibs.QualityOfLife.NeoSparkMax;
 import CustomLibs.QualityOfLife.NeoSparkFlex;
 
@@ -22,7 +22,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
-import CustomLibs.QualityOfLife.NeoSparkBase;
+
 
 import frc.robot.Constants.ModuleConstants;
 
@@ -33,8 +33,8 @@ public class MAXSwerveModule {
   private final RelativeEncoder m_drivingEncoder;
   private final AbsoluteEncoder m_turningEncoder;
 
-  private final NeoSparkClosedLoopController m_drivingClosedLoopController;
-  private final NeoSparkClosedLoopController m_turningClosedLoopController;
+  private final SparkClosedLoopController m_drivingClosedLoopController;
+  private final SparkClosedLoopController m_turningClosedLoopController;
 
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
@@ -46,24 +46,25 @@ public class MAXSwerveModule {
    * Encoder.
    */
   public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-    
 
-    // m_drivingClosedLoopController = m_drivingSpark.getClosedLoopController();
-    // m_turningClosedLoopController = m_turningSpark.getClosedLoopController();
+
 
     // Apply the respective configurations to the SPARKS. Reset parameters before
     // applying the configuration to bring the SPARK to a known good state. Persist
     // the settings to the SPARK to avoid losing them on a power cycle.
     m_drivingSpark = new NeoSparkMax(drivingCANId, NeoSparkMax.MotorType.kBrushless);
+    m_drivingClosedLoopController = m_drivingSpark.getClosedLoopController();
+
     m_drivingSpark.setPIDF(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD, ModuleConstants.kDrivingFF);
     m_drivingSpark.setOutputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
     m_drivingSpark.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
     m_drivingSpark.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     m_drivingSpark.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
     m_drivingSpark.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
-    m_drivingSpark.configure(m_drivingSpark.getCurrentConfig());
+    m_drivingSpark.configure(m_drivingSpark.getCurrentWorkingConfig());
 
     m_turningSpark = new NeoSparkMax(turningCANId, NeoSparkMax.MotorType.kBrushless);
+    m_turningClosedLoopController = m_turningSpark.getClosedLoopController();
     m_turningSpark.setPIDF(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF);
     m_turningSpark.setOutputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
     m_turningSpark.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
@@ -72,13 +73,10 @@ public class MAXSwerveModule {
     m_turningSpark.setVelocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
     m_turningSpark.setPositionWrappingEnabled(true);
     m_turningSpark.setPositionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
-    m_turningSpark.configure(m_turningSpark.getCurrentConfig());
+    m_turningSpark.configure(m_turningSpark.getCurrentWorkingConfig());
 
     m_drivingEncoder = m_drivingSpark.getEncoder();
     m_turningEncoder = m_turningSpark.getAbsoluteEncoder();
-
-    m_drivingClosedLoopController = m_drivingSpark.getClosedLoopController();
-    m_turningClosedLoopController = m_turningSpark.getClosedLoopController();
     
     m_chassisAngularOffset = chassisAngularOffset;
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
@@ -125,8 +123,8 @@ public class MAXSwerveModule {
     correctedDesiredState.optimize(new Rotation2d(m_turningEncoder.getPosition()));
 
     // Command driving and turning SPARKS towards their respective setpoints.
-    m_drivingSpark.setReference(correctedDesiredState.speedMetersPerSecond, NeoSparkBase.ControlType.kVelocity);
-    m_turningSpark.setReference(correctedDesiredState.angle.getRadians(), NeoSparkBase.ControlType.kPosition);
+    m_turningClosedLoopController.setReference(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
+    m_turningClosedLoopController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
     m_desiredState = desiredState;
   }

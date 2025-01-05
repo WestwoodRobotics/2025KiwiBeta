@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import CustomLibs.QualityOfLife.NeoSparkMax;
@@ -10,7 +12,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.UtilityConstants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import CustomLibs.QualityOfLife.NeoSparkLowLevel.MotorType;
+
 /**
  * The preRoller class represents the preRoller subsystem of the robot.
  * It controls the preRoller motor and provides methods to set the motor power,

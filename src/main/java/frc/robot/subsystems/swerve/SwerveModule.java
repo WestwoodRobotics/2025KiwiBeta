@@ -3,38 +3,36 @@ package frc.robot.subsystems.swerve;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 
-import CustomLibs.QualityOfLife.NeoSparkBase.PersistMode;
-import CustomLibs.QualityOfLife.NeoSparkBase.ResetMode;
-import CustomLibs.QualityOfLife.NeoSparkBaseConfig;
-import CustomLibs.QualityOfLife.NeoSparkClosedLoopController;
+
 
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import CustomLibs.QualityOfLife.NeoSparkFlex;
 import CustomLibs.QualityOfLife.NeoSparkMax;
-import CustomLibs.QualityOfLife.NeoSparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
-import CustomLibs.QualityOfLife.NeoSparkBase;
+
 /**
  * Represents a swerve module with driving and turning capabilities.
  * This class encapsulates the functionality for controlling a single swerve module,
  * including motor control, encoder feedback, and state management.
  */
 public class SwerveModule {
-    private final NeoSparkMax drivingMotorController;
+    private final NeoSparkFlex drivingMotorController;
     private final NeoSparkMax turningMotorController;
 
     private final RelativeEncoder drivingMotorEncoder;
     private final AbsoluteEncoder turningMotorEncoder;
 
-    private final NeoSparkClosedLoopController drivingMotorPIDController;
-    private final NeoSparkClosedLoopController turningMotorPIDController;
+    private final SparkClosedLoopController drivingMotorPIDController;
+    private final SparkClosedLoopController turningMotorPIDController;
 
     private double moduleChassisAngularOffset = 0;
     private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
@@ -47,14 +45,14 @@ public class SwerveModule {
      * @param chassisAngularOffset The angular offset of the module relative to the robot chassis.
      */
     public SwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset) {
-        drivingMotorController = new NeoSparkMax(drivingCANId, NeoSparkMax.MotorType.kBrushless);
+        drivingMotorController = new NeoSparkFlex(drivingCANId, MotorType.kBrushless);
         drivingMotorController.setPIDF(ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD, ModuleConstants.kDrivingFF);
         drivingMotorController.setOutputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
         drivingMotorController.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
         drivingMotorController.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
         drivingMotorController.setPositionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
         drivingMotorController.setVelocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
-        drivingMotorController.configure(drivingMotorController.getCurrentConfig());
+        drivingMotorController.configure(drivingMotorController.getCurrentWorkingConfig());
 
         turningMotorController = new NeoSparkMax(turningCANId, NeoSparkMax.MotorType.kBrushless);
         turningMotorController.setPIDF(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, ModuleConstants.kTurningFF);
@@ -65,7 +63,7 @@ public class SwerveModule {
         turningMotorController.setVelocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
         turningMotorController.setPositionWrappingEnabled(true);
         turningMotorController.setPositionWrappingInputRange(ModuleConstants.kTurningEncoderPositionPIDMinInput, ModuleConstants.kTurningEncoderPositionPIDMaxInput);
-        turningMotorController.configure(turningMotorController.getCurrentConfig());
+        turningMotorController.configure(turningMotorController.getCurrentWorkingConfig());
 
         // Get encoders and PID controllers
         drivingMotorEncoder = drivingMotorController.getEncoder();
@@ -119,11 +117,11 @@ public class SwerveModule {
 
         drivingMotorPIDController.setReference(
                 optimizedDesiredState.speedMetersPerSecond,
-                NeoSparkBase.ControlType.kVelocity
+                ControlType.kVelocity
         );
         turningMotorPIDController.setReference(
                 optimizedDesiredState.angle.getRadians(),
-                NeoSparkBase.ControlType.kPosition
+                ControlType.kPosition
         );
 
         moduleDesiredState = desiredState;
@@ -158,10 +156,6 @@ public class SwerveModule {
 
     public double getTurningEncoderPosition() {
         return turningMotorEncoder.getPosition();
-    }
-
-    public double getTurningMotorControllerP(){
-        return turningMotorController.getP();
     }
 
 

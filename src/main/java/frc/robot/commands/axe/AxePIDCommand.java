@@ -3,7 +3,7 @@ package frc.robot.commands.axe;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 
-import CustomLibs.QualityOfLife.NeoSparkBase;
+
 import CustomLibs.QualityOfLife.NeoSparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,10 +30,10 @@ public class AxePIDCommand extends Command {
     @Override
     public void initialize() {
 
-        axeMotor.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxAcceleration(AxeConstants.kMAXMotionMaxAcceleration); // Set to an appropriate velocity value
-        axeMotor.getCurrentConfig().getClosedLoopConfig().setMAXMotionMaxVelocity(AxeConstants.kMAXMotionMaxVelocity);
-        axeMotor.configCurrentConfig();
-        axeMotor.getClosedLoopController().setReference(targetPosition, NeoSparkBase.ControlType.kMAXMotionPositionControl);
+        axeMotor.setMAXMotionMaxAcceleration(AxeConstants.kMAXMotionMaxAcceleration); // Set to an appropriate velocity value
+        axeMotor.setMAXMotionMaxVelocity(AxeConstants.kMAXMotionMaxVelocity); // Set to an appropriate acceleration value
+        axeMotor.configure();
+        axeMotor.getClosedLoopController().setReference(targetPosition, ControlType.kMAXMotionPositionControl);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class AxePIDCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        axeMotor.getClosedLoopController().setReference(0, NeoSparkBase.ControlType.kDutyCycle);
+        axeMotor.getClosedLoopController().setReference(0, ControlType.kDutyCycle);
         axe.setAxePower(0);
     }
 }
