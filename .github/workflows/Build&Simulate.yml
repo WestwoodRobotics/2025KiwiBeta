@@ -5,7 +5,7 @@ on: [push, pull_request]  # Trigger the workflow on push events
 jobs:
   Simulate:
     runs-on: ubuntu-latest
-    container: wpilib/roborio-cross-ubuntu:2024-22.04
+    container: wpilib/roborio-cross-ubuntu:2025-24.04
     steps:
 
       - uses: actions/checkout@v4
