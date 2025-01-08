@@ -59,6 +59,7 @@ public class driveCommand extends Command {
    */
   @Override
   public void execute() {
+    //System.out.println("Worked Here");
     slowMode = m_swerveDrive.getSlowMode();
     double leftX, leftY, rightX;
     isYuMode = m_swerveDrive.isYuMode();
@@ -112,7 +113,7 @@ public class driveCommand extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    controller.setRumble(RumbleType.kBothRumble, 0);
+    //controller.setRumble(RumbleType.kBothRumble, 0);
   }
 
   /**

@@ -60,10 +60,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.ODCommandFactory.resetTimer();
+    //m_robotContainer.ODCommandFactory.resetTimer();
     m_robotContainer.m_robotDrive.resetGyro();
-    m_robotContainer.m_shooter.removeDefaultCommand();
-    m_robotContainer.ODCommandFactory.startTimer();
+    //m_robotContainer.m_shooter.removeDefaultCommand();
+    //m_robotContainer.ODCommandFactory.startTimer();
     //m_robotContainer.m_shooter.setDefaultCommand(new shooterPIDCommand(m_robotContainer.m_shooter, 1000));
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -92,10 +92,10 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    m_robotContainer.ODCommandFactory.stopTimer();
+    //m_robotContainer.ODCommandFactory.stopTimer();
 
-    m_robotContainer.m_shooter.removeDefaultCommand();
-    m_robotContainer.m_shooter.stopShooter();
+    //m_robotContainer.m_shooter.removeDefaultCommand();
+    //m_robotContainer.m_shooter.stopShooter();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

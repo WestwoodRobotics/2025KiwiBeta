@@ -60,10 +60,10 @@ public class RobotContainer {
       throw new RuntimeException("Failed to initialize SwerveDrive: " + e.getMessage(), e);
     }
   }
-  private final Intake m_intake = new Intake();
-  private final preRoller m_preRoller = new preRoller();
-  protected final Shooter m_shooter = new Shooter(false);
-  protected final Axe m_axe = new Axe();
+  //private final Intake m_intake = new Intake();
+  //private final preRoller m_preRoller = new preRoller();
+  //protected final Shooter m_shooter = new Shooter(false);
+  //protected final Axe m_axe = new Axe();
   private final SendableChooser<Command> autoChooser;
 
 
@@ -119,7 +119,7 @@ public class RobotContainer {
       XboxController.Button.kLeftBumper.value);
 
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
-  protected ODCommandFactory ODCommandFactory = new ODCommandFactory(m_intake, m_preRoller, m_shooter);
+  //protected ODCommandFactory ODCommandFactory = new ODCommandFactory(m_intake, m_preRoller, m_shooter);
 
 
   /**
@@ -128,21 +128,21 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    NamedCommands.registerCommand("SpinSensePreRoller", ODCommandFactory.intakeSenseCommand());
-    NamedCommands.registerCommand("Intake", ODCommandFactory.intakeSenseCommand());
-    NamedCommands.registerCommand("StopIntake", ODCommandFactory.stopIntakeSenseCommand());
-    NamedCommands.registerCommand("RevUpAndShoot", ODCommandFactory.revUpAndShootCommandAuton(0.90, 4000, 3000));
-    NamedCommands.registerCommand("StopShooter", ODCommandFactory.stopShooterCommand());
-    NamedCommands.registerCommand("releasePreRollerCommand", ODCommandFactory.fireNote());
-    NamedCommands.registerCommand("stopAllCommand", ODCommandFactory.stopAllCommand());
-    NamedCommands.registerCommand("resetPosition", new InstantCommand(() -> m_robotDrive.resetPose(new Pose2d(new Translation2d(1.31, m_robotDrive.getPose().getY()), new Rotation2d(Math.toRadians(0))))));
-    NamedCommands.registerCommand("checkAutoAndShoot", ODCommandFactory.checkAutoAndShoot());
-    NamedCommands.registerCommand("resetGyro", new InstantCommand(() -> m_robotDrive.resetGyro()));
+    // NamedCommands.registerCommand("SpinSensePreRoller", ODCommandFactory.intakeSenseCommand());
+    // NamedCommands.registerCommand("Intake", ODCommandFactory.intakeSenseCommand());
+    // NamedCommands.registerCommand("StopIntake", ODCommandFactory.stopIntakeSenseCommand());
+    // NamedCommands.registerCommand("RevUpAndShoot", ODCommandFactory.revUpAndShootCommandAuton(0.90, 4000, 3000));
+    // NamedCommands.registerCommand("StopShooter", ODCommandFactory.stopShooterCommand());
+    // NamedCommands.registerCommand("releasePreRollerCommand", ODCommandFactory.fireNote());
+    // NamedCommands.registerCommand("stopAllCommand", ODCommandFactory.stopAllCommand());
+    // NamedCommands.registerCommand("resetPosition", new InstantCommand(() -> m_robotDrive.resetPose(new Pose2d(new Translation2d(1.31, m_robotDrive.getPose().getY()), new Rotation2d(Math.toRadians(0))))));
+    // NamedCommands.registerCommand("checkAutoAndShoot", ODCommandFactory.checkAutoAndShoot());
+    // NamedCommands.registerCommand("resetGyro", new InstantCommand(() -> m_robotDrive.resetGyro()));
 
-    //Auto Commands
-    NamedCommands.registerCommand("LLSeekAndRotateOnly", new SeekAndTrackRotOnly(m_robotDrive, "limelight"));
-    NamedCommands.registerCommand("LLAlignAndRange", new AlignAndRangeAprilTag(m_robotDrive, "limelight"));
-    NamedCommands.registerCommand("LLAlignHorizontally", new AprilTagFollowGeneral(m_robotDrive, "limelight"));
+    // //Auto Commands
+    // NamedCommands.registerCommand("LLSeekAndRotateOnly", new SeekAndTrackRotOnly(m_robotDrive, "limelight"));
+    // NamedCommands.registerCommand("LLAlignAndRange", new AlignAndRangeAprilTag(m_robotDrive, "limelight"));
+    // NamedCommands.registerCommand("LLAlignHorizontally", new AprilTagFollowGeneral(m_robotDrive, "limelight"));
      
 
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -188,36 +188,36 @@ private void configureButtonBindings() {
     //driverLeftTrigger.onTrue(ODCommandFactory.intakeSenseCommand());
     //driverLeftTrigger.onFalse(ODCommandFactory.stopIntakeSenseCommand());
 
-    driverRightTrigger.onTrue(ODCommandFactory.revUpShooter());
-    driverRightTrigger.onFalse(ODCommandFactory.stopShooterCommand());
+    // driverRightTrigger.onTrue(ODCommandFactory.revUpShooter());
+    // driverRightTrigger.onFalse(ODCommandFactory.stopShooterCommand());
 
-    DriverRightBumper.onTrue(ODCommandFactory.revUpAndShootCommand(0.75, 4000));
-    DriverRightBumper.onFalse(ODCommandFactory.stopShooterCommand());
+    // DriverRightBumper.onTrue(ODCommandFactory.revUpAndShootCommand(0.75, 4000));
+    // DriverRightBumper.onFalse(ODCommandFactory.stopShooterCommand());
 
 
-    DriverDPadDown.onTrue(new InstantCommand(() -> m_shooter.setShooterPower(-0.85), m_shooter));
+    // DriverDPadDown.onTrue(new InstantCommand(() -> m_shooter.setShooterPower(-0.85), m_shooter));
 
-    // DriverBButton.onTrue(new InstantCommand(() -> m_preRoller.setPreRollerPower(1), m_preRoller));
-    // DriverBButton.onFalse(new InstantCommand(() -> m_preRoller.setPreRollerPower(0), m_preRoller));
-    DriverBButton.onTrue(ODCommandFactory.intakeSenseCommand());
-    DriverBButton.onFalse(ODCommandFactory.stopPreRollerCommand().alongWith(ODCommandFactory.stopIntakeCommand()));
+    // // DriverBButton.onTrue(new InstantCommand(() -> m_preRoller.setPreRollerPower(1), m_preRoller));
+    // // DriverBButton.onFalse(new InstantCommand(() -> m_preRoller.setPreRollerPower(0), m_preRoller));
+    // DriverBButton.onTrue(ODCommandFactory.intakeSenseCommand());
+    // DriverBButton.onFalse(ODCommandFactory.stopPreRollerCommand().alongWith(ODCommandFactory.stopIntakeCommand()));
     driverLeftTrigger.onTrue(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
     driverLeftTrigger.onFalse(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
 
-    DriverAButton.onTrue(new InstantCommand(() -> m_intake.setIntakePower(0.5), m_intake));
-    DriverAButton.onFalse(new InstantCommand(() -> m_intake.setIntakePower(0), m_intake));
-    DriverYButton.onTrue(new InstantCommand(() -> m_intake.setIntakePower(-0.5
-    ), m_intake));
-    DriverYButton.onFalse(new InstantCommand(() -> m_intake.setIntakePower(0), m_intake));
+    // DriverAButton.onTrue(new InstantCommand(() -> m_intake.setIntakePower(0.5), m_intake));
+    // DriverAButton.onFalse(new InstantCommand(() -> m_intake.setIntakePower(0), m_intake));
+    // DriverYButton.onTrue(new InstantCommand(() -> m_intake.setIntakePower(-0.5
+    // ), m_intake));
+    // DriverYButton.onFalse(new InstantCommand(() -> m_intake.setIntakePower(0), m_intake));
 
     //DriverLeftBumper.onTrue(new InstantCommand(() -> m_shooter.setShooterPower(-0.15), m_shooter).alongWith(new InstantCommand(() -> m_preRoller.setPreRollerPower(-1), m_preRoller)));
     //DriverLeftBumper.onFalse(new InstantCommand(() -> m_shooter.setShooterPower(0), m_shooter).alongWith(new InstantCommand(() -> m_preRoller.setPreRollerPower(0), m_preRoller)));
     //DriverDPadLeft.onTrue(new InstantCommand(()-> m_robotDrive.toggleYuMode()));
-    DriverDPadLeft.onTrue(new InstantCommand(() -> m_axe.resetEncoder()));
+    // DriverDPadLeft.onTrue(new InstantCommand(() -> m_axe.resetEncoder()));
 
-    //axe
-    DriverRightBumper.onTrue(new AxePIDCommand(m_axe, AxeConstants.kAxeUpPosition));
-    DriverLeftBumper.onTrue(new AxePIDCommand(m_axe, AxeConstants.kAxeDownPosition));
+    // //axe
+    // DriverRightBumper.onTrue(new AxePIDCommand(m_axe, AxeConstants.kAxeUpPosition));
+    // DriverLeftBumper.onTrue(new AxePIDCommand(m_axe, AxeConstants.kAxeDownPosition));
 
     /*
 

@@ -16,6 +16,7 @@ public class NeoSparkMax extends SparkMax {
     public NeoSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
         getStartingConfig();
+        this.configure(currentWorkingConfig);
     }
 
     private SparkBaseConfig getStartingConfig() {
@@ -26,7 +27,7 @@ public class NeoSparkMax extends SparkMax {
         config.idleMode(configAccessor.getIdleMode());
         // Current limits
         config.smartCurrentLimit(configAccessor.getSmartCurrentLimit(), configAccessor.getSmartCurrentFreeLimit(), configAccessor.getSmartCurrentRPMLimit());
-        config.secondaryCurrentLimit(configAccessor.getSecondaryCurrentLimit(), configAccessor.getSecondaryCurrentLimitChopCycles());
+        //config.secondaryCurrentLimit(configAccessor.getSecondaryCurrentLimit(), configAccessor.getSecondaryCurrentLimitChopCycles());
         // Ramp rates
         config.openLoopRampRate(configAccessor.getOpenLoopRampRate());
         config.closedLoopRampRate(configAccessor.getClosedLoopRampRate());
