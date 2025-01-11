@@ -15,11 +15,11 @@ public class NeoSparkMax extends SparkMax {
 
     public NeoSparkMax(int deviceID, MotorType type) {
         super(deviceID, type);
-        getStartingConfig();
-        this.configure(currentWorkingConfig);
+        this.configure(getStartingConfig());
+        //this.configure(currentWorkingConfig);
     }
 
-    private SparkBaseConfig getStartingConfig() {
+    private SparkMaxConfig getStartingConfig() {
         SparkMaxConfig config = new SparkMaxConfig();
 
         // Top-level motor config
@@ -112,8 +112,8 @@ public class NeoSparkMax extends SparkMax {
         // ... etc. for each status frame you care about ...
 
         // Finally, return the fully populated config
-        currentActiveConfig = config;
-        currentWorkingConfig = config;
+       // currentActiveConfig = config;
+        //currentWorkingConfig = config;
         return config;
     }
 
