@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    System.out.println(m_robotContainer.m_robotDrive.getProcessedHeading());
+    //System.out.println(m_robotContainer.m_robotDrive.getProcessedHeading());
   }
 
   @Override

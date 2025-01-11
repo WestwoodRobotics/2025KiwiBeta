@@ -47,7 +47,7 @@ public class SeekAndTrackRotOnly extends Command {
     public void execute() {
         switch(this.state) {
             case SEARCHING:
-                swerve.drive(0, 0, SEARCH_ROTATION_SPEED, true, false);
+                swerve.drive(0, 0, SEARCH_ROTATION_SPEED, true);
                 if (LimelightHelpers.getTV(limelightName)) {
                     this.state = TrackingState5.LOCKED_ON;
 
@@ -61,7 +61,7 @@ public class SeekAndTrackRotOnly extends Command {
                 else if (LimelightHelpers.getTV(limelightName)) {
                     this.state = TrackingState5.LOCKED_ON;
                 }
-                swerve.drive(0,0,0,true, false);
+                swerve.drive(0,0,0,true);
             break;
             case LOCKED_ON:
                 if (!LimelightHelpers.getTV(limelightName)) {
@@ -77,14 +77,14 @@ public class SeekAndTrackRotOnly extends Command {
                 
                 // Apply rotation only - no translation
                 swerve.drive(0, 0, 
-                rotationOutput, true, false);
+                rotationOutput, true);
             break;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        swerve.drive(0, 0, 0, true, false);
+        swerve.drive(0, 0, 0, true);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class AlignAndRangeAprilTag extends Command {
     public void execute() {
         if (!LimelightHelpers.getTV(limelightName)) {
             // No valid target
-            swerve.drive(0, 0, 0, true, false);
+            swerve.drive(0, 0, 0, true);
             return;
         }
 
@@ -55,7 +55,7 @@ public class AlignAndRangeAprilTag extends Command {
         // Forward/backward movement for range control
         // Left/right movement is zero
         // Rotation is for horizontal alignment
-        swerve.drive(-rangeOutput, 0, -rotationOutput, true, false);
+        swerve.drive(-rangeOutput, 0, -rotationOutput, true);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class AlignAndRangeAprilTag extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        swerve.drive(0, 0, 0, true, false);
+        swerve.drive(0, 0, 0, true);
     }
 }

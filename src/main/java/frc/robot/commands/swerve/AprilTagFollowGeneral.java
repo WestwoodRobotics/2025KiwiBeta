@@ -61,7 +61,7 @@ public class AprilTagFollowGeneral extends Command {
     public void execute() {
         switch(this.state) {
             case SEARCHING:
-                swerve.drive(0, 0, -0.1, true, false);
+                swerve.drive(0, 0, -0.1, true);
                 if (LimelightHelpers.getTV(limelightName)) {
                     this.state = TrackingState1.LOCKED_ON;
 
@@ -76,7 +76,7 @@ public class AprilTagFollowGeneral extends Command {
                 else if (LimelightHelpers.getTV(limelightName)) {
                     this.state = TrackingState1.LOCKED_ON;
                 }
-                swerve.drive(0,0,0,true, false);
+                swerve.drive(0,0,0,true);
 
             break;
             case LOCKED_ON:
@@ -108,7 +108,7 @@ public class AprilTagFollowGeneral extends Command {
 
                 // Apply rotation only - no translation
                 swerve.drive(-z_output, x_output, 
-                rot_output, true, false);
+                rot_output, true);
                 System.out.println("X: " + t_x + " Z: " + t_z + "Rot: " + t_rot);
                 
             break;
@@ -117,7 +117,7 @@ public class AprilTagFollowGeneral extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        swerve.drive(0, 0, 0, true, false);
+        swerve.drive(0, 0, 0, true);
     }
 
     @Override

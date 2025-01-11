@@ -51,6 +51,7 @@ public class driveCommand extends Command {
     rotationPIDController.setTolerance(5);
     targetHeading = m_swerveDrive.getProcessedHeading();
     rotationPIDController.setSetpoint(targetHeading);
+    isYuMode = false;
   }
 
   /**
@@ -62,7 +63,7 @@ public class driveCommand extends Command {
     //System.out.println("Worked Here");
     slowMode = m_swerveDrive.getSlowMode();
     double leftX, leftY, rightX;
-    isYuMode = m_swerveDrive.isYuMode();
+    //isYuMode = m_swerveDrive.isYuMode();
     if (controller.getBackButtonPressed()) {
       slowMode = !slowMode;
     }

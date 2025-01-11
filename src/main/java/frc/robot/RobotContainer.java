@@ -49,17 +49,8 @@ import frc.robot.commands.swerve.*;
  */
 public class RobotContainer {
 
-  protected final SwerveDrive m_robotDrive;
-  {
-    try {
-      m_robotDrive = new SwerveDrive();
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to initialize SwerveDrive: " + e.getMessage(), e);
-    }
-    catch (org.json.simple.parser.ParseException e) {
-      throw new RuntimeException("Failed to initialize SwerveDrive: " + e.getMessage(), e);
-    }
-  }
+  protected final SwerveDrive m_robotDrive = new SwerveDrive();
+  
   //private final Intake m_intake = new Intake();
   //private final preRoller m_preRoller = new preRoller();
   //protected final Shooter m_shooter = new Shooter(false);
@@ -240,7 +231,7 @@ private void configureButtonBindings() {
     //   while (0 == 0){
     //     System.out.println("Yaw Offset: " + m_robotDrive.gyroSubsystem.getProcessedRot2dYaw().getDegrees());
     //   }
-      this.m_robotDrive.gyroSubsystem.setGyroYawOffset(m_robotDrive.gyroSubsystem.getGyroHeadingFromPathPlannerAuto(autoChooser.getSelected().getName()));
+      this.m_robotDrive.m_gyro.setGyroYawOffset(m_robotDrive.m_gyro.getGyroHeadingFromPathPlannerAuto(autoChooser.getSelected().getName()));
 
       return autoChooser.getSelected();
     }
