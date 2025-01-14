@@ -4,6 +4,10 @@ import org.ejml.simple.SimpleMatrix;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N9;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,13 +24,32 @@ public class KalmanLocalization {
 
     public double curr_time;
 
+    
+
+    public double start_x;
+    public double start_y;
+    public double start_theta;
+
+    public Pose2d startingPose;
+
+    public Pose2d currentPose;
+
+    public Twist2d deltaTwist;
+
+    public double dx;
+    public double dy;
+    public double dtheta;
+    
+
+    
+
     public KalmanLocalization(
-        double start_x,
-        double start_y,
-        double start_theta
+        Pose2d startingPose
     ) {
+        this.startingPose = startingPose;
+
         state = new Matrix<N9, N1>(new SimpleMatrix(
-            new double[]{start_x, start_y, start_theta, 0, 0, 0, 0, 0, 0}
+            new double[]{startingPose.getTranslation().getX(), startingPose.getTranslation().getY(), startingPose.getRotation().getRadians(), 0, 0, 0, 0, 0, 0}
         ));
         cov = new Matrix<N9, N9>(new SimpleMatrix(
             new double[][]{
@@ -122,6 +145,11 @@ public class KalmanLocalization {
         double gyro_dtheta,
         double speed
     ) {
+        currentPose = new Pose2d(new Translation2d(odometry_dx, odometry_dy), new Rotation2d(odometry_dtheta));
+        deltaTwist = startingPose.log(currentPose);
+        dx = deltaTwist.dx;
+        dy = deltaTwist.dy;
+        dtheta = deltaTwist.dtheta;
         double next_time = Timer.getFPGATimestamp();
         double dt = next_time - curr_time;
         curr_time = next_time;
@@ -172,5 +200,7 @@ public class KalmanLocalization {
     public double getGyroBias(){
         return state.get(8, 0);
     }
+
+    
         
 }
