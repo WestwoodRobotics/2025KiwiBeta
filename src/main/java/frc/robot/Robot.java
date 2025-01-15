@@ -4,11 +4,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.epilogue.*;
 import frc.robot.commands.shooter.shooterPIDCommand;
+
+import javax.xml.crypto.Data;
+
+//import edu.wpi.first.*;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.util.datalog.DataLog;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,9 +25,11 @@ import frc.robot.commands.shooter.shooterPIDCommand;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private Timer m_timer;
+
   private RobotContainer m_robotContainer;
   
 
@@ -32,6 +43,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     m_robotContainer.m_robotDrive.resetGyro();
+    DataLogManager.start();
+    //Epilogue.bind(this);
+    DriverStation.startDataLog(DataLogManager.getLog());
+
   }
 
   /**

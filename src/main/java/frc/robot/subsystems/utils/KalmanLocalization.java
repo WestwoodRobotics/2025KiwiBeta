@@ -4,31 +4,52 @@ import org.ejml.simple.SimpleMatrix;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N9;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.numbers.N6;
 
 public class KalmanLocalization {
 
-    public Matrix<N9, N1> state;
-    public Matrix<N9, N9> cov;
+    public Matrix<N7, N1> state;
+    public Matrix<N7, N7> cov;
 
-    public Matrix<N9, N9> state_update_matrix;
-
-    public KalmanFilter<N9, N1, N6> filter;
+    public KalmanFilter<N7, N1, N6> filter;
 
     public double curr_time;
+
+    public Pose2d startingPose;
+
+    public Pose2d currentPose;
+
+    public Twist2d deltaTwist;
+
+    public double dx;
+    public double dy;
+    public double dtheta;
+
+
+    public KalmanLocalization(Pose2d pose2d){
+        this(pose2d.getX(),pose2d.getY(), pose2d.getRotation().getRadians());
+    }
 
     public KalmanLocalization(
         double start_x,
         double start_y,
         double start_theta
     ) {
-        state = new Matrix<N9, N1>(new SimpleMatrix(
-            new double[]{start_x, start_y, start_theta, 0, 0, 0, 0, 0, 0}
-        ));
-        cov = new Matrix<N9, N9>(new SimpleMatrix(
+        state = new Matrix<N7, N1>(new SimpleMatrix(7, 1));
+        state.set(0, 0, start_x);
+        state.set(1, 0, start_y);
+        state.set(2, 0, start_theta);
+        state.set(3, 0, 0);
+        state.set(4, 0, 0);
+        state.set(5, 0, 0);
+        state.set(6, 0, 0);
+
+        cov = new Matrix<N7, N7>(new SimpleMatrix(7, 7));
             new double[][]{
                 {0.1, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0.1, 0, 0, 0, 0, 0, 0, 0},
@@ -40,29 +61,17 @@ public class KalmanLocalization {
                 {0, 0, 0, 0, 0, 0, 0, 0.001, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0.1},
             }
-        ));
+        );
         filter = new KalmanFilter<>(state, cov);
 
         curr_time = Timer.getFPGATimestamp();
     }
 
-    private Matrix<N9, N9> getUpdateMatrix(double dt) {
-        return new Matrix<N9, N9>(new SimpleMatrix(
-            new double[][]{
-                {1, 0, 0, dt, 0, 0, 0.5*dt*dt, 0, 0},
-                {0, 1, 0, 0, dt, 0, 0, 0.5*dt*dt, 0},
-                {0, 0, 1, 0, 0, dt, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, dt, 0, 0},
-                {0, 0, 0, 0, 1, 0, 0, dt, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1},
-            }
-        ));
+    private Matrix<N7, N7> getUpdateMatrix(double dt) {
+        return new Matrix<N7, N7>(new SimpleMatrix(7, 7)));
     }
-    private Matrix<N9, N1> getControlMatrix(double dt) {
-        return new Matrix<N9, N1>(new SimpleMatrix(
+    private Matrix<N9, N8> getControlMatrix(double dt) {
+        return new Matrix<N9, N8>(new SimpleMatrix(
             new double[][]{
                 {0},{0},{0},{0},{0},{0},{0},{0},{0},
             }
@@ -122,6 +131,11 @@ public class KalmanLocalization {
         double gyro_dtheta,
         double speed
     ) {
+        currentPose = new Pose2d(new Translation2d(odometry_dx, odometry_dy), new Rotation2d(odometry_dtheta));
+        deltaTwist = startingPose.log(currentPose);
+        dx = deltaTwist.dx;
+        dy = deltaTwist.dy;
+        dtheta = deltaTwist.dtheta;
         double next_time = Timer.getFPGATimestamp();
         double dt = next_time - curr_time;
         curr_time = next_time;
@@ -172,5 +186,13 @@ public class KalmanLocalization {
     public double getGyroBias(){
         return state.get(8, 0);
     }
+
+    public Pose2d getPoseMeters(){
+        return new Pose2d(new Translation2d(this.getX(), this.getY()), new Rotation2d(this.getTheta()));
+    }
+
+    
         
 }
+
+
