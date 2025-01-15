@@ -8,7 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.numbers.*;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N9;
 import edu.wpi.first.wpilibj.Timer;
 
 public class KalmanLocalization {
@@ -36,9 +37,7 @@ public class KalmanLocalization {
     }
 
     public KalmanLocalization(
-        double start_x,
-        double start_y,
-        double start_theta
+        Pose2d startingPose
     ) {
         state = new Matrix<N7, N1>(new SimpleMatrix(7, 1));
         state.set(0, 0, start_x);
@@ -131,6 +130,11 @@ public class KalmanLocalization {
         double gyro_dtheta,
         double speed
     ) {
+        currentPose = new Pose2d(new Translation2d(odometry_dx, odometry_dy), new Rotation2d(odometry_dtheta));
+        deltaTwist = startingPose.log(currentPose);
+        dx = deltaTwist.dx;
+        dy = deltaTwist.dy;
+        dtheta = deltaTwist.dtheta;
         currentPose = new Pose2d(new Translation2d(odometry_dx, odometry_dy), new Rotation2d(odometry_dtheta));
         deltaTwist = startingPose.log(currentPose);
         dx = deltaTwist.dx;
