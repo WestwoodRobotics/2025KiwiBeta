@@ -3,6 +3,7 @@ package frc.robot.commands.swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -103,7 +104,7 @@ public class driveCommand extends Command {
       }
     }
 
-    m_swerveDrive.drive(leftY, leftX, rightX, true);
+    m_swerveDrive.drive(leftY, leftX, rightX, false);
     //controller.setRumble(RumbleType.kBothRumble, leftY > 0 ? 1 : 0);
   }
 

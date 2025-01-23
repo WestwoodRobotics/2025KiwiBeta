@@ -144,6 +144,7 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(new driveCommand(m_robotDrive, m_driverController));
 
     autoChooser = AutoBuilder.buildAutoChooser();
+    
 
 
     //if in auto set the default command of the shooter subsystem to be the shooterPIDCommand
@@ -194,6 +195,8 @@ private void configureButtonBindings() {
     // DriverBButton.onFalse(ODCommandFactory.stopPreRollerCommand().alongWith(ODCommandFactory.stopIntakeCommand()));
     driverLeftTrigger.onTrue(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
     driverLeftTrigger.onFalse(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
+    // AutoBuilder.resetOdom();
+    // AutoBuilder.pathfindToPose(null, null);
 
     // DriverAButton.onTrue(new InstantCommand(() -> m_intake.setIntakePower(0.5), m_intake));
     // DriverAButton.onFalse(new InstantCommand(() -> m_intake.setIntakePower(0), m_intake));

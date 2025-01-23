@@ -15,6 +15,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -30,7 +31,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PortConstants;
 import frc.robot.subsystems.utils.KalmanLocalization;
+//import frc.robot.subsystems.utils.KalmanLocalization;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.ArrayList;
 
 
 public class SwerveDrive extends SubsystemBase {
@@ -64,17 +68,20 @@ public class SwerveDrive extends SubsystemBase {
 
   // The gyro sensor
   public Gyro m_gyro = new Gyro();
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics,
-      m_gyro.getProcessedRot2dYaw(),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      });
+  // SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+  //     DriveConstants.kDriveKinematics,
+  //     m_gyro.getProcessedRot2dYaw(),
+  //     new SwerveModulePosition[] {
+  //         m_frontLeft.getPosition(),
+  //         m_frontRight.getPosition(),
+  //         m_rearLeft.getPosition(),
+  //         m_rearRight.getPosition()
+  //     });
 
-    KalmanLocalization kalmanLocalization = new KalmanLocalization(m_odometry.getPoseMeters());
+  KalmanLocalization kalmanLocalization = new KalmanLocalization(new Pose2d(
+    new Translation2d(0, 0),
+    new Rotation2d(0)
+  ));
 
 
     private boolean slowMode = false;
@@ -170,19 +177,43 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(
-        m_gyro.getProcessedRot2dYaw(),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
+    // m_odometry.update(
+    //     m_gyro.getProcessedRot2dYaw(),
+    //     new SwerveModulePosition[] {
+    //         m_frontLeft.getPosition(),
+    //         m_frontRight.getPosition(),
+    //         m_rearLeft.getPosition(),
+    //         m_rearRight.getPosition()
+    //     });
+    ArrayList<Translation2d> wheel_pos = new ArrayList<Translation2d>();
+    wheel_pos.add(DriveConstants.frontLeftPos);
+    wheel_pos.add(DriveConstants.frontRightPos);
+    wheel_pos.add(DriveConstants.rearLeftPos);
+    wheel_pos.add(DriveConstants.rearRightPos);
 
-    fieldVisualization.setRobotPose(getPose());
+    ArrayList<Translation2d> wheel_vel = new ArrayList<Translation2d>();
+    wheel_vel.add(m_frontLeft.getVelocityVector());
+    wheel_vel.add(m_frontRight.getVelocityVector());
+    wheel_vel.add(m_rearLeft.getVelocityVector());
+    wheel_vel.add(m_rearRight.getVelocityVector());
+
+    double gyro_rate = m_gyro.getZRate()*Math.PI/180;
+
+    kalmanLocalization.update(wheel_vel, wheel_pos, gyro_rate);
+
+    SmartDashboard.putNumber("Gyro rate", gyro_rate);
+    SmartDashboard.putNumber("pose_x", kalmanLocalization.getX());
+    SmartDashboard.putNumber("pose_y", kalmanLocalization.getY());
+    SmartDashboard.putNumber("pose_th", kalmanLocalization.getTheta());
+    SmartDashboard.putNumber("pose_vx", kalmanLocalization.getXVel());
+    SmartDashboard.putNumber("pose_vy", kalmanLocalization.getYVel());
+    SmartDashboard.putNumber("pose_vth", kalmanLocalization.getThetaVel());
+    SmartDashboard.putNumber("bias", kalmanLocalization.getGyroBias());
+
+    fieldVisualization.setRobotPose(kalmanLocalization.getPoseMeters());
 
     //
-    kalmanLocalization.update();
+    //kalmanLocalization.update();
     publisher.set(new SwerveModuleState[]{
       m_frontLeft.getState(),
       m_frontRight.getState(),
@@ -202,7 +233,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    return kalmanLocalization.getPoseMeters();
   }
 
   /**
@@ -211,15 +242,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
-        m_gyro.getProcessedRot2dYaw(),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        },
-        pose);
+    
   }
 
   /**
@@ -351,28 +374,8 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void resetPose(){
-    m_odometry.resetPosition(
-      m_gyro.getProcessedRot2dYaw(),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      },
-      new Pose2d()
-    );
   }
 
   public void resetPose(Pose2d pose){
-    m_odometry.resetPosition(
-      m_gyro.getProcessedRot2dYaw(),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      },
-      pose
-    );
   }
 }

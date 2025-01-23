@@ -36,7 +36,12 @@ public class KalmanFilter<N extends Num, C extends Num, S extends Num> {
         Matrix<S, N1> pre_fit_res = sensor_input.minus(sensor_matrix.times(state));
         Matrix<S, S> pre_fit_cov = sensor_matrix.times(state_covariance).times(sensor_matrix.transpose()).plus(sensor_cov);
 
-        Matrix<N,S> kalman_gain = state_covariance.times(sensor_matrix.transpose()).times(pre_fit_cov.inv());
+        Matrix<N,S> kalman_gain = state_covariance.times(sensor_matrix.transpose().times(pre_fit_cov.inv()))
+        ;
+        for(int i = 0; i < 7; i++) {
+            System.out.print(kalman_gain.get(i, 0) + " ");
+        }
+            System.out.println();
         Matrix<N, N1> a_post_state = state.plus(kalman_gain.times(pre_fit_res));
         Matrix<N, N> a_post_cov = (Matrix.eye(n_dim).minus(kalman_gain.times(sensor_matrix))).times(state_covariance);
 
