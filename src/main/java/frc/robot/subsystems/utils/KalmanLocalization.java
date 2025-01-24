@@ -47,15 +47,13 @@ public class KalmanLocalization {
         ));
 
         cov = new Matrix<N7, N7>(new SimpleMatrix(7, 7, true,
-            0.1, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0.1, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0.1, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0.01, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0.01, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0.01, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0.001, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0.001, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0.1
+            0.1, 0, 0, 0, 0, 0, 0,
+            0, 0.1, 0, 0, 0, 0, 0, 
+            0, 0, 0.1, 0, 0, 0, 0,
+            0, 0, 0, 0.0001, 0, 0, 0,
+            0, 0, 0, 0, 0.0001, 0, 0,
+            0, 0, 0, 0, 0, 0.0001, 0,
+            0, 0, 0, 0, 0, 0, 100
         ));
         filter = new KalmanFilter<N7, N8, N1>(state, cov);
 
@@ -86,8 +84,8 @@ public class KalmanLocalization {
         }
         SimpleMatrix swerve_forward_kinematics = swerve_inv_kinematics.pseudoInverse();
         SimpleMatrix rotation_matrix = new SimpleMatrix(3, 3, true,
-            Math.cos(-theta), Math.sin(-theta), 0,
-            -Math.sin(-theta), Math.cos(-theta), 0,
+            Math.cos(theta), -Math.sin(theta), 0,
+            Math.sin(theta), Math.cos(theta), 0,
             0, 0, 1
         );
         SimpleMatrix world_forward_kinematics = (swerve_forward_kinematics.transpose().mult(rotation_matrix.transpose())).transpose();
@@ -115,17 +113,18 @@ public class KalmanLocalization {
         Pose2d velocity,
         double dt
     ) {
-        final double CONSTANT_UNCERTAINTY = 0.00001;
-        final double DIRECTIONAL_UNCERTAINTY = 0.001;
-        final double SPEED_UNCERTAINTY = 0.001;
-        final double ROTATION_UNCERTAINTY = 0.001;
+        final double CONSTANT_UNCERTAINTY = 0.000001;
+        final double DIRECTIONAL_UNCERTAINTY = 0.01;
+        final double SPEED_UNCERTAINTY = 0.01;
+        final double ROTATION_UNCERTAINTY = 0.01;
         double speed = Math.sqrt(velocity.getX()*velocity.getX() + velocity.getY()*velocity.getY());
-        double x_uncertainty = CONSTANT_UNCERTAINTY + velocity.getX()*DIRECTIONAL_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
-        double y_uncertainty = CONSTANT_UNCERTAINTY + velocity.getY()*DIRECTIONAL_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
-        double t_uncertainty = CONSTANT_UNCERTAINTY + velocity.getRotation().getRadians()*ROTATION_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
+        double x_uncertainty = CONSTANT_UNCERTAINTY + Math.abs(velocity.getX())*DIRECTIONAL_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
+        double y_uncertainty = CONSTANT_UNCERTAINTY + Math.abs(velocity.getY())*DIRECTIONAL_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
+        double t_uncertainty = CONSTANT_UNCERTAINTY + Math.abs(velocity.getRotation().getRadians())*ROTATION_UNCERTAINTY + speed*SPEED_UNCERTAINTY;
+
 
         final double BIAS_STABILITY_RAD_PER_SEC = 0.00003878509;
-        double bias_stability_var = Math.pow(dt*BIAS_STABILITY_RAD_PER_SEC, 2);
+        double bias_stability_var = BIAS_STABILITY_RAD_PER_SEC;
         return new Matrix<N7, N7>(new SimpleMatrix(
             new double[][]{
                 {0, 0, 0, 0, 0, 0, 0},

@@ -199,7 +199,7 @@ public class SwerveDrive extends SubsystemBase {
 
     double gyro_rate = m_gyro.getZRate()*Math.PI/180;
 
-    kalmanLocalization.update(wheel_vel, wheel_pos, gyro_rate);
+    kalmanLocalization.update(wheel_vel, wheel_pos, gyro_rate + 2*Math.PI/180);
 
     SmartDashboard.putNumber("Gyro rate", gyro_rate);
     SmartDashboard.putNumber("pose_x", kalmanLocalization.getX());
