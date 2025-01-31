@@ -27,13 +27,11 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AxeConstants;
 import frc.robot.Constants.PortConstants;
-import frc.robot.commands.ODCommandFactory;
-import frc.robot.commands.axe.AxePIDCommand;
-import frc.robot.commands.preRoller.preRollerSenseCommand;
 import frc.robot.commands.shooter.shooterPIDCommand;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Shooter.preRoller;
-import frc.robot.subsystems.axe.Axe;
+
+import frc.robot.subsystems.elevator.elevator;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.commands.swerve.*;
@@ -50,6 +48,8 @@ import frc.robot.commands.swerve.*;
 public class RobotContainer {
 
   protected final SwerveDrive m_robotDrive = new SwerveDrive();
+  protected final elevator m_elevator = new elevator(PortConstants.kElevatorMotor1Port);
+  protected final Intake m_intake = new Intake();
   
   //private final Intake m_intake = new Intake();
   //private final preRoller m_preRoller = new preRoller();
@@ -195,6 +195,21 @@ private void configureButtonBindings() {
     // DriverBButton.onFalse(ODCommandFactory.stopPreRollerCommand().alongWith(ODCommandFactory.stopIntakeCommand()));
     driverLeftTrigger.onTrue(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
     driverLeftTrigger.onFalse(new InstantCommand(() -> m_robotDrive.toggleSlowMode()));
+
+    
+
+    DriverRightBumper.onTrue(new InstantCommand(()-> m_intake.setIntakePower(0.5)));
+    DriverRightBumper.onFalse(new InstantCommand(()-> m_intake.setIntakePower(0)));
+
+    DriverDPadDown.onTrue(new InstantCommand(()-> m_elevator.setElevatorSpeed(0.5)));
+    DriverDPadDown.onFalse(new InstantCommand(()-> m_elevator.setElevatorSpeed(0)));
+
+    DriverDPadUp.onTrue(new InstantCommand(()-> m_elevator.setElevatorSpeed(-0.5)));
+    DriverDPadUp.onFalse(new InstantCommand(()-> m_elevator.setElevatorSpeed(0)));
+
+    DriverLeftBumper.whileTrue(new InstantCommand(()-> m_intake.setIntakePower(-0.5)));
+    DriverLeftBumper.onFalse(new InstantCommand(()-> m_intake.setIntakePower(0)));
+
     // AutoBuilder.resetOdom();
     // AutoBuilder.pathfindToPose(null, null);
 

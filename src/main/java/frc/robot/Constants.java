@@ -53,10 +53,10 @@ public final class Constants {
     // Angular offsets of the modules relative to the chassis in radians
     // These values are the angle offset of the wheels when the robot is facing forwards (Absolute Encoders)
     //DO NOT CHANGE THESE VALUES UNLESS YOU KNOW WHAT YOU'RE DOING!!
-    public static final double kFrontLeftChassisAngularOffset = Math.PI;
-    public static final double kFrontRightChassisAngularOffset = Math.PI; 
+    public static final double kFrontLeftChassisAngularOffset = Math.PI+(Math.PI/2);
+    public static final double kFrontRightChassisAngularOffset = 0; 
     public static final double kRearLeftChassisAngularOffset = Math.PI;
-    public static final double kRearRightChassisAngularOffset = Math.PI;
+    public static final double kRearRightChassisAngularOffset = Math.PI/2;
 
 
 
@@ -73,15 +73,15 @@ public final class Constants {
 
   public static final class PortConstants{
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 15;
-    public static final int kRearLeftDrivingCanId = 13;
-    public static final int kFrontRightDrivingCanId = 17;
-    public static final int kRearRightDrivingCanId = 11;
+    public static final int kFrontLeftDrivingCanId = 13;
+    public static final int kRearLeftDrivingCanId = 15;
+    public static final int kFrontRightDrivingCanId = 11;
+    public static final int kRearRightDrivingCanId = 17;
 
-    public static final int kFrontLeftTurningCanId = 14;
-    public static final int kRearLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 16;
-    public static final int kRearRightTurningCanId = 10;
+    public static final int kFrontLeftTurningCanId = 12;
+    public static final int kRearLeftTurningCanId = 14;
+    public static final int kFrontRightTurningCanId = 10;
+    public static final int kRearRightTurningCanId = 16;
 
 
 
@@ -92,6 +92,10 @@ public final class Constants {
 
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
+    public static int kElevatorMotor1Port = 50;
+
+    public static int outtakeMotorPort = 62;
+
   }
 
   public static final class TransportConstants{
@@ -194,7 +198,7 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 6784;
   }
   public static final class IntakeConstants {
-    public static final int kIntakeMotorPort = 30; //TODO: Change this value
+    public static final int kIntakeMotorPort = 58; //TODO: Change this value
     public static final double kRPMConversionFactor = 1.0;
 
 

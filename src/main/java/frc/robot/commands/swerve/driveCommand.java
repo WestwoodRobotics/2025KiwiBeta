@@ -104,7 +104,7 @@ public class driveCommand extends Command {
       }
     }
 
-    m_swerveDrive.drive(leftY, leftX, rightX, false);
+    m_swerveDrive.drive(leftY, leftX, rightX, true                                                                                    );
     //controller.setRumble(RumbleType.kBothRumble, leftY > 0 ? 1 : 0);
   }
 
