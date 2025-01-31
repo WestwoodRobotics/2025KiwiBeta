@@ -94,7 +94,7 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
     public static int kElevatorMotor1Port = 50;
 
-    public static int outtakeMotorPort = 62;
+    public static int outtakeMotorPort = 59;
 
   }
 
