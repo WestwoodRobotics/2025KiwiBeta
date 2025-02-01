@@ -4,13 +4,23 @@ on: [push, pull_request]  # Trigger the workflow on push events
 
 jobs:
   Simulate:
-    runs-on: blacksmith-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     container: wpilib/roborio-cross-ubuntu:2025-24.04
     steps:
 
       - uses: actions/checkout@v4
       - name: Grant execute permission # just in case
         run: chmod +x gradlew
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build Robot Code
         run: ./gradlew build
